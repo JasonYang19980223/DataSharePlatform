@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import web3 from './web3.js'
 import Nbar from './Nbar.js';
-import storage from './storage.js'
+import member from './contract/member.js'
 
 class Create extends Component {
 
@@ -9,41 +9,74 @@ class Create extends Component {
     super(props)
     this.state = {
       account: '',
-      num:5,
-      submitNum:0
+      name:'',
+      phone:'',
+      email:'',
+      address:''
     }    
-    this.handleChange = this.handleChange.bind(this);
+    this.handleName = this.handleName.bind(this);
+    this.handlePhone = this.handlePhone.bind(this);
+    this.handleEmail = this.handleEmail.bind(this);
+    this.handleAddress = this.handleAddress.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleChange(e) {
-    this.setState({num: e.target.value});
+  handleName(e) {
+    this.setState({name: e.target.value});
+  }
+
+  handlePhone(e) {
+    this.setState({phone: e.target.value});
+  }
+
+  handleEmail(e) {
+    this.setState({email: e.target.value});
+  }
+
+  handleAddress(e) {
+    this.setState({address: e.target.value});
   }
 
   async handleClick(e) {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-    this.setState({submitNum:this.state.num})
-    await storage.methods.store(parseInt(this.state.submitNum)).send({ from: this.state.account })
-    console.log(this.state.submitNum);
+    await member.methods.createMember(this.state.name,this.state.email,0,23).send({ from: this.state.account })
+    console.log(this.state.name);
   }
 
   render() {
+    const styleInput={
+      border:'2px solid'
+    };
     return (
       <div>
         <Nbar account={this.state.account}/>
-        <h1>
-          create member
-        </h1>
-        <div>
-          <input type="text" onChange={ this.handleChange } />
-          <input
-            type="button"
-            value="store num"
-            onClick={this.handleClick}
-          />
-        </div>
-        <h3>storage: {this.state.submitNum}</h3>
+        <form style={{margin:'5px'}}>
+          <label>
+            <input type="text" placeholder="name" style={styleInput} onChange={ this.handleName } />
+          </label>
+          <br/>
+          <label>
+            <input type="text" placeholder="phone" style={styleInput} onChange={ this.handlePhone } />
+          </label>
+          <br/>
+          <label>
+            <input type="text" placeholder="email" style={styleInput} onChange={ this.handleEmail } />
+          </label>
+          <br/>
+          <label>
+            <input type="text" placeholder="address" style={styleInput} onChange={ this.handleAddress } />
+          </label>
+          <br/>
+          <label>
+            <input
+              type="button"
+              value="confirm"
+              style={{cursor:'pointer'}}
+              onClick={this.handleClick}
+            />
+          </label>
+        </form>
       </div>
     );
   }

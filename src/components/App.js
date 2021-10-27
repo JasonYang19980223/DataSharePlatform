@@ -1,20 +1,9 @@
 import React, { Component } from 'react';
 import Nbar from './Nbar.js';
-import storage from './storage.js'
 
 
 
 class App extends Component {
-  
-
-  async componentWillMount() {
-    await this.loadData()
-  }
-
-  async loadData() {
-    console.log(await storage.methods.retrieve().call());
-  }
-
 
   constructor(props){
     super(props)
@@ -24,9 +13,21 @@ class App extends Component {
   }
 
   render() {
+    const imgStyle ={
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    };
     return (
       <div className="Home">
         <Nbar/>
+        <br/>
+        <br/>
+        <div style={imgStyle}>
+          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px'/>
+          <img src={require('../images/joinIcon.png')}/>
+          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px'/>
+        </div>
       </div>
     );
   }
