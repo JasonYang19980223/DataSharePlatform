@@ -13,8 +13,7 @@
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "function",
-      "signature": "0x6057361d"
+      "type": "function"
     },
     {
       "constant": true,
@@ -28,8 +27,7 @@
       ],
       "payable": false,
       "stateMutability": "view",
-      "type": "function",
-      "signature": "0x2e64cec1"
+      "type": "function"
     }
   ],
   "bytecode": "0x608060405234801561001057600080fd5b5060ec8061001f6000396000f3fe6080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680632e64cec114604e5780636057361d146076575b600080fd5b348015605957600080fd5b50606060ad565b6040518082815260200191505060405180910390f35b348015608157600080fd5b5060ab60048036036020811015609657600080fd5b810190808035906020019092919050505060b6565b005b60008054905090565b806000819055505056fea165627a7a72305820a4d5e5d37650ba14c1aab0e656ce1410be12727e64c38f20a9ae90c5da0413700029",
@@ -550,12 +548,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x3D223bD66E90e382a573E17fef8130B577B94B51",
-      "transactionHash": "0xe80fbaa42987faf3a538d77dbce2817a7f4778238db978776dfec1dc120721e2"
+      "address": "0x0A07e8b733A4A2A7cE3776af2E404432824BE9C2",
+      "transactionHash": "0x600882a1bd6319bb51b2e7a558cb900e4e5017bdb65e00ee7bcba5a8a9760c14"
     }
   },
-  "schemaVersion": "3.0.2",
-  "updatedAt": "2021-10-26T13:14:53.458Z",
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-10-28T10:49:44.861Z",
+  "networkType": "ethereum",
   "devdoc": {
     "details": "Store & retrieve value in a variable",
     "methods": {

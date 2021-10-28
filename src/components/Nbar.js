@@ -11,8 +11,10 @@ export default function Nbar (props) {
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">
            <Nav className="mr-auto">
-              <Nav.Link href="/Request">Data request</Nav.Link>
-              <Nav.Link href="/Create">Create member</Nav.Link>
+              <Nav.Link href="/CreatePage">Create member</Nav.Link>
+              <Nav.Link href="/Request">Data Request</Nav.Link>
+              <Nav.Link href="/MemberInform">Member information</Nav.Link>
+              <Nav.Link href="/RequestList">Request list</Nav.Link>
            </Nav>
             <ul className="navbar-nav px-3">
               <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">

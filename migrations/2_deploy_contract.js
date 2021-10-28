@@ -1,7 +1,7 @@
 const Storage = artifacts.require("Storage");
-const Member = artifacts.require("Member");
+const Platform = artifacts.require("Platform");
 
 module.exports = function(deployer) {
   deployer.deploy(Storage);
-  deployer.deploy(Member);
+  deployer.deploy(Platform);
 };

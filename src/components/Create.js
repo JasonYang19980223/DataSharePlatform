@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import web3 from './web3.js'
 import Nbar from './Nbar.js';
-import member from './contract/member.js'
+import platform from './contract/platform.js'
 
 class Create extends Component {
 
@@ -21,6 +21,11 @@ class Create extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  async componentWillMount() {
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+  }
+
   handleName(e) {
     this.setState({name: e.target.value});
   }
@@ -38,9 +43,7 @@ class Create extends Component {
   }
 
   async handleClick(e) {
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-    await member.methods.createMember(this.state.name,this.state.email,0,23).send({ from: this.state.account })
+    await platform.methods.createMember(this.state.name,this.state.email,this.state.phone).send({ from: this.state.account })
     console.log(this.state.name);
   }
 
