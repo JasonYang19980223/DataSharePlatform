@@ -24,6 +24,12 @@ class Create extends Component {
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
+    const pm = await platform.methods.manager().call();
+    if(this.state.account == pm){
+      this.setState({manager:true});
+    }
+    else
+      this.setState({manager:false});
   }
 
   handleName(e) {
@@ -53,7 +59,7 @@ class Create extends Component {
     };
     return (
       <div>
-        <Nbar account={this.state.account}/>
+        <Nbar account={this.state.account} manager ={this.state.manager}/>
         <form style={{margin:'5px'}}>
           <label>
             <input type="text" placeholder="name" style={styleInput} onChange={ this.handleName } />

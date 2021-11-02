@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import web3 from './web3.js'
 import Nbar from './Nbar.js';
 import platform from './contract/platform.js'
+import history from '../History';
 
 class Request extends Component {
 
@@ -20,8 +21,15 @@ class Request extends Component {
   }
 
   async componentWillMount() {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
+    const pm = await platform.methods.manager().call();
+    console.log(pm);
+    if(this.state.account == pm){
+      this.setState({manager:true});
+    }
+    else
+      this.setState({manager:false});
   }
 
   handleCol(e) {
@@ -38,6 +46,8 @@ class Request extends Component {
 
   async handleClick(e) {
     await platform.methods.createRequest(this.state.column,this.state.privacy,this.state.discription).send({ from: this.state.account })
+    let path = "/Upload"; 
+    history.push(path);
   }
 
   render() {
@@ -46,7 +56,7 @@ class Request extends Component {
     };
     return (
       <div>
-        <Nbar account={this.state.account}/>
+        <Nbar account={this.state.account} manager={this.state.manager}/>
         <form style={{margin:'5px'}}>
           <label>
             <input type="text" placeholder="column" style={styleInput} onChange={ this.handleCol } />

@@ -4,27 +4,30 @@ import Nbar from './Nbar.js';
 import platform from './contract/platform.js'
 import history from '../History';
 
-class RequestList extends Component {
+class PendingList extends Component {
   
   constructor(props){
     super(props)
     this.state = {
       account: '',
       requests:[],
-      isLogIn:''
+      isLogIn:'',
+      manager:true
     }
-    this.handleClick = this.handleClick.bind(this);
   }
 
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
+
     if(this.state.account == pm){
       this.setState({manager:true});
+      console.log("HI")
     }
     else
       this.setState({manager:false});
+
     await this.getInit()
   }
 
@@ -36,21 +39,19 @@ class RequestList extends Component {
 
     for (var i = 1; i <= reqLen; i++) {
       const request = await platform.methods.requestsID(i).call()
-      this.setState({
-        requests: [...this.state.requests, request]
-      })
+      if(request.getShare){
+        this.setState({
+          requests: [...this.state.requests, request]
+        })
+      }
     }
   }
 
-  async handleClick(reqID) {
-    let path = "/UploadShare"; 
-    history.push({
-      pathname:path,
-      state:{
-        requestID:reqID
-      }
-    });
-  }
+
+  /**async getShareAccount(reqID) {
+    let req = await platform.methods.requestsID(reqID).call()
+    let SA = await platform.methods.ipfsOwner(req.).call()
+  }**/
 
   render() {
     return (
@@ -65,7 +66,7 @@ class RequestList extends Component {
               <th scope="col">account</th>
               <th scope="col">column</th>
               <th scope="col">privacy</th>
-              <th scope="col">share</th>
+              <th scope="col">share account</th>
             </tr>
           </thead>
           <tbody id="request">
@@ -76,14 +77,6 @@ class RequestList extends Component {
                   <td>{request.ownerAddress}</td>
                   <td>{request.column}</td>
                   <td>{request.privacyRequirement.toString()}</td>
-                  <td>
-                    <input
-                      type="button"
-                      value="Data Share"
-                      style={{cursor:'pointer'}}
-                      onClick={()=>this.handleClick(request.ID)}
-                    />
-                  </td>
                 </tr>
               )
             })}
@@ -96,4 +89,4 @@ class RequestList extends Component {
 }
 
 
-export default RequestList;
+export default PendingList;

@@ -1,10 +1,17 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Platform {
+    //平台管理者帳號
+    address public manager;
     //計算資料要求的總數
-    uint public requestCnt =0;
+    uint public datasetCnt =0;
     
-    //成員結構
+    //初始化平台管理者
+    constructor(){
+        manager = msg.sender;
+    }
+    
+    //成員架構
     struct Mem{
         string name;
         string email;
@@ -12,18 +19,29 @@ contract Platform {
         address addr;
     }
     
-    //需求結構
-    struct Request{
+    //資料表架構
+    struct Dataset{
         uint ID;
+        uint dataType; //request:0 share:1 result:2
         string column;
-        int privacy;
+        int privacyRequirement;
         string discription;
         address ownerAddress;
+        string ipfsHash;
+        bool getShare;
+        bool getResult;
     }
     
+
     //判斷是否為成員
     modifier memberOnly{
         require(memberCheck[msg.sender]==true);
+        _;
+    }
+
+    //判斷是否為管理員
+    modifier managerOnly{
+        require(msg.sender==manager);
         _;
     }
     
@@ -34,8 +52,12 @@ contract Platform {
     mapping (address => bool) public memberCheck;
 
     //資料要求的ID
-    mapping (uint => Request) public requestsID;
+    mapping (uint => Dataset) public requestsID;
     
+    //需求者對應address和ipfs的hash
+    mapping (string => address) public ipfsOwner;
+
+
     //新增成員
     function createMember(string memory _name, string memory _email, string memory _phone)public{
         Mem memory m;
@@ -57,21 +79,59 @@ contract Platform {
     
     //新增需求
     function createRequest(string memory _column,int _privacy,string memory _discription) public memberOnly{
-        Request memory req;
-        requestCnt++;
-        req=Request({
-            ID: requestCnt,
+        Dataset memory res;
+        datasetCnt++;
+        res=Dataset({
+            ID: datasetCnt,
+            dataType:0,
             column:_column,
-            privacy:_privacy,
+            privacyRequirement:_privacy,
             discription:_discription,
-            ownerAddress:msg.sender
+            ownerAddress:msg.sender,
+            ipfsHash:'',
+            getShare:false,
+            getResult:false
         });
-        requestsID[req.ID] = req;
+        requestsID[res.ID] = res;
     }
     
-    //取得需求
-    function getMemberRequest(uint id) public view returns(string memory){
-        return requestsID[id].discription;
+    //新增分享
+    function createShare(string memory _column,int _privacy) public memberOnly{
+        Dataset memory res;
+        datasetCnt++;
+        res=Dataset({
+            ID: datasetCnt,
+            dataType:1,
+            column:_column,
+            privacyRequirement:_privacy,
+            discription:'share',
+            ownerAddress:msg.sender,
+            ipfsHash:'',
+            getShare:false,
+            getResult:false
+        });
+        requestsID[res.ID] = res;
+    }    
+
+    //上傳ipfs檔案
+    function uploadRequestFile(string memory _ipfsHash) public memberOnly{
+        string memory ipfsHash;
+        ipfsHash = _ipfsHash;
+        ipfsOwner[ipfsHash] = msg.sender;
+    }
+    
+    function uploadShareFile(uint id ,string memory _ipfsHash) public memberOnly{
+        string memory ipfsHash;
+        ipfsHash = _ipfsHash;
+        ipfsOwner[ipfsHash] = msg.sender;
+        requestsID[id].getShare=true;
+    }
+
+    function uploadResultFile(uint id ,string memory _ipfsHash) public managerOnly{
+        string memory ipfsHash;
+        ipfsHash = _ipfsHash;
+        ipfsOwner[ipfsHash] = msg.sender;
+        requestsID[id].getResult=true;
     }
 }
 

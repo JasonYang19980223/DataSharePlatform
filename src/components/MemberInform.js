@@ -19,6 +19,14 @@ class MemberInform extends Component {
 
   async componentWillMount() {
     await this.check()
+
+    const pm = await platform.methods.manager().call();
+    if(this.state.account == pm){
+      this.setState({manager:true});
+    }
+    else
+      this.setState({manager:false});
+
     if(this.state.isLogIn)
       await this.getInit()
   }
@@ -38,7 +46,7 @@ class MemberInform extends Component {
 
     let reqLen=0;
     console.log(reqLen)
-    reqLen = await platform.methods.requestCnt().call()
+    reqLen = await platform.methods.datasetCnt().call()
     console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
@@ -57,7 +65,7 @@ class MemberInform extends Component {
   render() {
     return (
       <div>
-        <Nbar account={this.state.account}/>
+        <Nbar account={this.state.account} manager ={this.state.manager}/>
         <h3>Account: {this.state.account}</h3>
         <br/>
         <h3>Name: {this.state.name}</h3>
@@ -68,7 +76,7 @@ class MemberInform extends Component {
               <th scope="col">#</th>
               <th scope="col">column</th>
               <th scope="col">privacy</th>
-              <th scope="col"></th>
+              <th scope="col">result</th>
             </tr>
           </thead>
           <tbody id="request">
@@ -77,7 +85,7 @@ class MemberInform extends Component {
                 <tr key={key}>
                   <th scope="row">{request.ID.toString()} </th>
                   <td>{request.column}</td>
-                  <td>{request.privacy.toString()}</td>
+                  <td>{request.privacyRequirement.toString()}</td>
                 </tr>
               )
             })}

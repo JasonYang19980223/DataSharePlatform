@@ -14,6 +14,12 @@ class CreatePage extends Component {
     }    
   }
   async componentWillMount() {
+    const pm = await platform.methods.manager().call();
+    if(this.state.account == pm){
+      this.setState({manager:true});
+    }
+    else
+      this.setState({manager:false});
     await this.check()
   }
 

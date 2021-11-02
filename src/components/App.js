@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Nbar from './Nbar.js';
-
+import web3 from './web3.js'
+import platform from './contract/platform.js'
 
 
 class App extends Component {
@@ -9,7 +10,19 @@ class App extends Component {
     super(props)
     this.state = {
       contract:'',
+      account:''
     }    
+  }
+
+  async componentWillMount() {
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+    const pm = await platform.methods.manager().call();
+    if(this.state.account === pm){
+      this.setState({manager:true});
+    }
+    else
+      this.setState({manager:false});
   }
 
   render() {
@@ -20,7 +33,7 @@ class App extends Component {
     };
     return (
       <div className="Home">
-        <Nbar/>
+        <Nbar account={this.state.account} manager ={this.state.manager}/>
         <br/>
         <br/>
         <div style={imgStyle}>
