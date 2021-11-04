@@ -25,7 +25,7 @@ class Create extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
-    if(this.state.account == pm){
+    if(this.state.account === pm){
       this.setState({manager:true});
     }
     else

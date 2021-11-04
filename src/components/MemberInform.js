@@ -21,7 +21,7 @@ class MemberInform extends Component {
     await this.check()
 
     const pm = await platform.methods.manager().call();
-    if(this.state.account == pm){
+    if(this.state.account === pm){
       this.setState({manager:true});
     }
     else
@@ -52,7 +52,9 @@ class MemberInform extends Component {
     for (var i = 1; i <= reqLen; i++) {
       const request = await platform.methods.requestsID(i).call()
       console.log('b')
-      if(request.ownerAddress===this.state.account){
+      let key = request.ipfsHash
+      let address = await platform.methods.ipfsOwner(key).call()
+      if(address===this.state.account){
         console.log('a')
         console.log(request)
         this.setState({

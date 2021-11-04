@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import web3 from './web3.js'
 import Nbar from './Nbar.js';
 import platform from './contract/platform.js'
-import history from '../History';
 
 class PendingList extends Component {
   
@@ -14,6 +13,7 @@ class PendingList extends Component {
       isLogIn:'',
       manager:true
     }
+    this.load = this.load.bind(this);
   }
 
   async componentWillMount() {
@@ -21,7 +21,7 @@ class PendingList extends Component {
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
 
-    if(this.state.account == pm){
+    if(this.state.account === pm){
       this.setState({manager:true});
       console.log("HI")
     }
@@ -39,7 +39,7 @@ class PendingList extends Component {
 
     for (var i = 1; i <= reqLen; i++) {
       const request = await platform.methods.requestsID(i).call()
-      if(request.getShare){
+      if(request.ipfsHashShare!==''){
         this.setState({
           requests: [...this.state.requests, request]
         })
@@ -47,6 +47,36 @@ class PendingList extends Component {
     }
   }
 
+  load(ipfs){
+    fetch(`https://ipfs.infura.io/ipfs/${ipfs}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/csv',
+        },
+      })
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create blob link to download
+        const url = window.URL.createObjectURL(
+          new Blob([blob]),
+        );
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute(
+          'download',
+          `FileName.csv`,
+        );
+
+        // Append to html link element page
+        document.body.appendChild(link);
+
+        // Start download
+        link.click();
+
+        // Clean up and remove the link
+        link.parentNode.removeChild(link);
+      });
+  }
 
   /**async getShareAccount(reqID) {
     let req = await platform.methods.requestsID(reqID).call()
@@ -63,10 +93,10 @@ class PendingList extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">account</th>
+              <th scope="col">Requester file</th>
               <th scope="col">column</th>
               <th scope="col">privacy</th>
-              <th scope="col">share account</th>
+              <th scope="col">Sharer file</th>
             </tr>
           </thead>
           <tbody id="request">
@@ -74,9 +104,14 @@ class PendingList extends Component {
               return(
                 <tr key={key}>
                   <th scope="row">{request.ID.toString()} </th>
-                  <td>{request.ownerAddress}</td>
+                  <td>
+                    <button onClick = {()=>this.load(request.ipfsHash)}>Downlod file</button>
+                  </td>
                   <td>{request.column}</td>
                   <td>{request.privacyRequirement.toString()}</td>
+                  <td>
+                    <button onClick = {()=>this.load(request.ipfsHashShare)}>Downlod file</button>
+                  </td>
                 </tr>
               )
             })}

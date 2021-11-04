@@ -9,7 +9,7 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      contract:'',
+      contract:platform,
       account:''
     }    
   }
@@ -17,7 +17,7 @@ class App extends Component {
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-    const pm = await platform.methods.manager().call();
+    const pm = await this.state.contract.methods.manager().call();
     if(this.state.account === pm){
       this.setState({manager:true});
     }
@@ -37,9 +37,9 @@ class App extends Component {
         <br/>
         <br/>
         <div style={imgStyle}>
-          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px'/>
-          <img src={require('../images/joinIcon.png')}/>
-          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px'/>
+          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px' alt ="something wrong img cant show"/>
+          <img src={require('../images/joinIcon.png')}alt ="something wrong img cant show"/>
+          <img atyle={{margin:'10px'}}src={require('../images/org.png')} height = '200px' weight = '200px' alt ="something wrong img cant show"/>
         </div>
       </div>
     );

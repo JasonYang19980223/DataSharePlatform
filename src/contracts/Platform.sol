@@ -22,14 +22,13 @@ contract Platform {
     //資料表架構
     struct Dataset{
         uint ID;
-        uint dataType; //request:0 share:1 result:2
         string column;
         int privacyRequirement;
         string discription;
-        address ownerAddress;
         string ipfsHash;
-        bool getShare;
-        bool getResult;
+        string ipfsHashShare;
+        string ipfsHashResult;
+        address ownerAddress;
     }
     
 
@@ -78,60 +77,54 @@ contract Platform {
 
     
     //新增需求
-    function createRequest(string memory _column,int _privacy,string memory _discription) public memberOnly{
+    function createRequest(string memory _ipfsHash ,string memory _column,int _privacy,string memory _discription) public memberOnly{
         Dataset memory res;
         datasetCnt++;
         res=Dataset({
             ID: datasetCnt,
-            dataType:0,
             column:_column,
             privacyRequirement:_privacy,
             discription:_discription,
-            ownerAddress:msg.sender,
-            ipfsHash:'',
-            getShare:false,
-            getResult:false
+            ipfsHash:_ipfsHash,
+            ipfsHashShare:'',
+            ipfsHashResult:'',
+            ownerAddress:msg.sender
         });
+        ipfsOwner[_ipfsHash] = msg.sender;
         requestsID[res.ID] = res;
     }
     
     //新增分享
-    function createShare(string memory _column,int _privacy) public memberOnly{
+    function createShare(uint reqid,string memory _ipfsHash ,string memory _column,int _privacy) public memberOnly{
         Dataset memory res;
-        datasetCnt++;
         res=Dataset({
-            ID: datasetCnt,
-            dataType:1,
+            ID: 0,
             column:_column,
             privacyRequirement:_privacy,
             discription:'share',
-            ownerAddress:msg.sender,
-            ipfsHash:'',
-            getShare:false,
-            getResult:false
+            ipfsHash:_ipfsHash,
+            ipfsHashShare:'',
+            ipfsHashResult:'',
+            ownerAddress:msg.sender
         });
-        requestsID[res.ID] = res;
+        ipfsOwner[_ipfsHash] = msg.sender;
+        requestsID[reqid].ipfsHashShare=_ipfsHash;
     }    
 
     //上傳ipfs檔案
-    function uploadRequestFile(string memory _ipfsHash) public memberOnly{
-        string memory ipfsHash;
-        ipfsHash = _ipfsHash;
-        ipfsOwner[ipfsHash] = msg.sender;
-    }
+    // function uploadRequestFile(uint id, string memory _ipfsHash) public memberOnly{
+    //     requestsID[id].ipfsHash=_ipfsHash;
+    //     ipfsOwner[_ipfsHash] = msg.sender;
+    // }
     
-    function uploadShareFile(uint id ,string memory _ipfsHash) public memberOnly{
-        string memory ipfsHash;
-        ipfsHash = _ipfsHash;
-        ipfsOwner[ipfsHash] = msg.sender;
-        requestsID[id].getShare=true;
-    }
+    // function uploadShareFile(uint id ,string memory _ipfsHash) public memberOnly{
+    //     ipfsOwner[_ipfsHash] = msg.sender;
+    //     requestsID[id].ipfsHashShare=_ipfsHash;
+    // }
 
     function uploadResultFile(uint id ,string memory _ipfsHash) public managerOnly{
-        string memory ipfsHash;
-        ipfsHash = _ipfsHash;
-        ipfsOwner[ipfsHash] = msg.sender;
-        requestsID[id].getResult=true;
+        ipfsOwner[_ipfsHash] = msg.sender;
+        requestsID[id].ipfsHashResult=_ipfsHash;
     }
 }
 

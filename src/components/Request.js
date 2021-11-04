@@ -3,6 +3,11 @@ import web3 from './web3.js'
 import Nbar from './Nbar.js';
 import platform from './contract/platform.js'
 import history from '../History';
+import { create } from 'ipfs-http-client'
+
+
+const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
+
 
 class Request extends Component {
 
@@ -12,7 +17,8 @@ class Request extends Component {
       account:'',
       column:'',
       privacy:0,
-      discription:''
+      discription:'',
+      ipfs:''
     }    
     this.handleCol = this.handleCol.bind(this);
     this.handlePrivacy = this.handlePrivacy.bind(this);
@@ -25,7 +31,7 @@ class Request extends Component {
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
     console.log(pm);
-    if(this.state.account == pm){
+    if(this.state.account === pm){
       this.setState({manager:true});
     }
     else
@@ -44,10 +50,32 @@ class Request extends Component {
     this.setState({discription: e.target.value});
   }
 
+  captureFile = (event) =>{
+    event.preventDefault()
+    //console.log("file capture")
+    //process file for ipfs
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = () => {
+      this.setState({buffer:Buffer(reader.result)})
+      console.log('buffer',Buffer(reader.result))
+    }
+    console.log(event.target.files)
+  }
+
+//ex:QmWpV82gZgvbjGbwhp6gYdPFALECDKWjqkRe13LVVa2Z4i
+  onSubmit = async (event) =>{
+    event.preventDefault()
+    console.log("submitting the form")
+    const file=await ipfs.add(this.state.buffer)
+    const ipfsHash = file.path
+    this.setState({ipfsHash})
+    console.log(this.state.ipfsHash)
+  }
+
   async handleClick(e) {
-    await platform.methods.createRequest(this.state.column,this.state.privacy,this.state.discription).send({ from: this.state.account })
-    let path = "/Upload"; 
-    history.push(path);
+    await platform.methods.createRequest(this.state.ipfsHash,this.state.column,this.state.privacy,this.state.discription).send({from:this.state.account})
   }
 
   render() {
@@ -57,7 +85,7 @@ class Request extends Component {
     return (
       <div>
         <Nbar account={this.state.account} manager={this.state.manager}/>
-        <form style={{margin:'5px'}}>
+        <div style={{margin:'5px'}}>
           <label>
             <input type="text" placeholder="column" style={styleInput} onChange={ this.handleCol } />
           </label>
@@ -71,6 +99,13 @@ class Request extends Component {
           </label>
           <br/>
           <br/>
+          <div>
+            <h2> Upload File </h2>
+            <form onSubmit = {this.onSubmit} >
+              <input type = 'file' onChange = {this.captureFile}/>
+              <input type = 'submit' />
+            </form>
+          </div>
           <label>
             <input
               type="button"
@@ -79,7 +114,7 @@ class Request extends Component {
               onClick={this.handleClick}
             />
           </label>
-        </form>
+        </div>
       </div>
     );
   }

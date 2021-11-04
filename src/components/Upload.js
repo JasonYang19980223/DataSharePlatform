@@ -12,7 +12,7 @@ class Upload extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
-    if(this.state.account == pm){
+    if(this.state.account === pm){
       this.setState({manager:true});
     }
     else
@@ -50,7 +50,7 @@ class Upload extends Component {
     const file=await ipfs.add(this.state.buffer)
     const ipfsHash = file.path
     console.log(file.path)
-    await platform.methods.uploadRequestFile(ipfsHash).send({from:this.state.account}).then((r)=>{
+    await platform.methods.uploadRequestFile(this.props.location.state.requestID,ipfsHash).send({from:this.state.account}).then((r)=>{
       this.setState({ipfsHash})
     })
   }

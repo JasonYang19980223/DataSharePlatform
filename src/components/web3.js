@@ -14,7 +14,9 @@ async function loadWeb3(){
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
     }
 }
+(async () => {
+  await loadWeb3()
+})()
 
-loadWeb3();
 
 export default web3;

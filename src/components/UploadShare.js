@@ -8,24 +8,37 @@ const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
 class UploadShare extends Component {
 
+  constructor(props){
+    super(props)
+    this.state = {
+      account:'',
+      column:'',
+      privacy:0,
+      ipfsHash:''
+    }    
+    this.handleCol = this.handleCol.bind(this);
+    this.handlePrivacy = this.handlePrivacy.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
   async componentWillMount() {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();
-    if(this.state.account == pm){
+    console.log(pm);
+    if(this.state.account === pm){
       this.setState({manager:true});
     }
     else
       this.setState({manager:false});
   }
 
-  constructor(props){
-    super(props);
-    this.state ={
-      account :'',
-      buffer:null,
-      ipfsHash:""
-    };
+  handleCol(e) {
+    this.setState({column: e.target.value});
+  }
+
+  handlePrivacy(e) {
+    this.setState({privacy: parseInt(e.target.value)});
   }
 
 
@@ -49,61 +62,46 @@ class UploadShare extends Component {
     console.log("submitting the form")
     const file=await ipfs.add(this.state.buffer)
     const ipfsHash = file.path
-    console.log(file.path)
-    await platform.methods.uploadShareFile(this.props.location.state.requestID,ipfsHash).send({from:this.state.account}).then((r)=>{
-      this.setState({ipfsHash})
-    })
+    this.setState({ipfsHash})
+    console.log(this.state.ipfsHash)
   }
 
-  load=()=>{
-    fetch(`https://ipfs.infura.io/ipfs/${this.state.ipfsHash}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/csv',
-        },
-      })
-      .then((response) => response.blob())
-      .then((blob) => {
-        // Create blob link to download
-        const url = window.URL.createObjectURL(
-          new Blob([blob]),
-        );
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute(
-          'download',
-          `FileName.csv`,
-        );
-
-        // Append to html link element page
-        document.body.appendChild(link);
-
-        // Start download
-        link.click();
-
-        // Clean up and remove the link
-        link.parentNode.removeChild(link);
-      });
+  async handleClick(e) {
+    await platform.methods.createShare(this.props.location.state.requestID,this.state.ipfsHash,this.state.column,this.state.privacy).send({from:this.state.account})
   }
 
   render() {
+    const styleInput={
+      border:'2px solid'
+    };
     return (
       <div>
-        <Nbar account={this.state.account} manager ={this.state.manager}/>
-        <div className="container-fluid mt-5">
-          <div className="row">
-            <main role="main" className="col-lg-12 d-flex text-center">
-              <div className="content mr-auto ml-auto">
-                <p>&nbsp;</p>
-                <h2> Upload File </h2>
-                <form onSubmit = {this.onSubmit} >
-                  <input type = 'file' onChange = {this.captureFile}/>
-                  <input type = 'submit' />
-                </form>
-                <button onClick = {this.load}>Download</button>
-              </div>
-            </main>
+        <Nbar account={this.state.account} manager={this.state.manager}/>
+        <div style={{margin:'5px'}}>
+          <label>
+            <input type="text" placeholder="column" style={styleInput} onChange={ this.handleCol } />
+          </label>
+          <br/>
+          <label>
+            <input type="text" placeholder="privacy" style={styleInput} onChange={ this.handlePrivacy } />
+          </label>
+          <br/>
+          <br/>
+          <div>
+            <h2> Upload File </h2>
+            <form onSubmit = {this.onSubmit} >
+              <input type = 'file' onChange = {this.captureFile}/>
+              <input type = 'submit' />
+            </form>
           </div>
+          <label>
+            <input
+              type="button"
+              value="confirm"
+              style={{cursor:'pointer'}}
+              onClick={this.handleClick}
+            />
+          </label>
         </div>
       </div>
     );
