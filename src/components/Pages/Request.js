@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import web3 from './web3.js'
+import web3 from '../Load/web3.js'
+import Nbar from '../Nbar.js';
+import platform from '../Load/platform.js'
+import history from '../../History';
 import { create } from 'ipfs-http-client'
-import Nbar from './Nbar.js';
-import platform from './contract/platform.js'
+
 
 const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
-class UploadShare extends Component {
+
+class Request extends Component {
 
   constructor(props){
     super(props)
@@ -14,10 +17,12 @@ class UploadShare extends Component {
       account:'',
       column:'',
       privacy:0,
-      ipfsHash:''
+      discription:'',
+      ipfs:''
     }    
     this.handleCol = this.handleCol.bind(this);
     this.handlePrivacy = this.handlePrivacy.bind(this);
+    this.handleDiscription = this.handleDiscription.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -41,6 +46,9 @@ class UploadShare extends Component {
     this.setState({privacy: parseInt(e.target.value)});
   }
 
+  handleDiscription(e) {
+    this.setState({discription: e.target.value});
+  }
 
   captureFile = (event) =>{
     event.preventDefault()
@@ -67,7 +75,7 @@ class UploadShare extends Component {
   }
 
   async handleClick(e) {
-    await platform.methods.createShare(this.props.location.state.requestID,this.state.ipfsHash,this.state.column,this.state.privacy).send({from:this.state.account})
+    await platform.methods.createRequest(this.state.ipfsHash,this.state.column,this.state.privacy,this.state.discription).send({from:this.state.account})
   }
 
   render() {
@@ -84,6 +92,10 @@ class UploadShare extends Component {
           <br/>
           <label>
             <input type="text" placeholder="privacy" style={styleInput} onChange={ this.handlePrivacy } />
+          </label>
+          <br/>
+          <label>
+            <input type="text" placeholder="discription" style={styleInput} onChange={ this.handleDiscription } />
           </label>
           <br/>
           <br/>
@@ -108,4 +120,5 @@ class UploadShare extends Component {
   }
 }
 
-export default UploadShare;
+
+export default Request;

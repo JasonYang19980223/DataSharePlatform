@@ -1,4 +1,4 @@
-import web3 from '../web3';
+import web3 from './web3';
 import Platform from '../../abis/Platform.json';
 
 // let platform
@@ -30,7 +30,7 @@ import Platform from '../../abis/Platform.json';
 
 const platform =new web3.eth.Contract(
     Platform.abi,
-    '0x88a52B833bfC7e9C03b377F3f231f5d0A0d99B6e'
+    '0x5e8ef37E433562E8a3677a7cCc64A7f53A42d819'
 );
 
 export default platform;

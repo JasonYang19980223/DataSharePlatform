@@ -69,13 +69,7 @@ contract Platform {
         members[msg.sender] = m;
         memberCheck[msg.sender]=true;
     }
-    
-    //取得成員的名稱
-    function getMemberName() public view returns(string memory){
-        return members[msg.sender].name;
-    }
-
-    
+      
     //新增需求
     function createRequest(string memory _ipfsHash ,string memory _column,int _privacy,string memory _discription) public memberOnly{
         Dataset memory res;
@@ -110,17 +104,6 @@ contract Platform {
         ipfsOwner[_ipfsHash] = msg.sender;
         requestsID[reqid].ipfsHashShare=_ipfsHash;
     }    
-
-    //上傳ipfs檔案
-    // function uploadRequestFile(uint id, string memory _ipfsHash) public memberOnly{
-    //     requestsID[id].ipfsHash=_ipfsHash;
-    //     ipfsOwner[_ipfsHash] = msg.sender;
-    // }
-    
-    // function uploadShareFile(uint id ,string memory _ipfsHash) public memberOnly{
-    //     ipfsOwner[_ipfsHash] = msg.sender;
-    //     requestsID[id].ipfsHashShare=_ipfsHash;
-    // }
 
     function uploadResultFile(uint id ,string memory _ipfsHash) public managerOnly{
         ipfsOwner[_ipfsHash] = msg.sender;

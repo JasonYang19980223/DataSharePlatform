@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import web3 from './web3.js'
-import Nbar from './Nbar.js';
-import platform from './contract/platform.js'
+import web3 from '../Load/web3.js'
+import Nbar from '../Nbar.js';
+import platform from '../Load/platform.js'
+import { create } from 'ipfs-http-client'
+
+
+const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
 class PendingList extends Component {
   
@@ -78,6 +82,31 @@ class PendingList extends Component {
       });
   }
 
+  captureFile = (event) =>{
+    event.preventDefault()
+    //console.log("file capture")
+    //process file for ipfs
+    const file = event.target.files[0]
+    const reader = new window.FileReader()
+    reader.readAsArrayBuffer(file)
+    reader.onloadend = () => {
+      this.setState({buffer:Buffer(reader.result)})
+      console.log('buffer',Buffer(reader.result))
+    }
+    console.log(event.target.files)
+  }
+
+//ex:QmWpV82gZgvbjGbwhp6gYdPFALECDKWjqkRe13LVVa2Z4i
+  onSubmit = async (event,rid) =>{
+    event.preventDefault()
+    console.log("submitting the form")
+    const file=await ipfs.add(this.state.buffer)
+    const ipfsHash = file.path
+    this.setState({ipfsHash})
+    console.log(this.state.ipfsHash)
+    await platform.methods.uploadResultFile(rid,ipfsHash).send({ from: this.state.account })
+  }
+
   /**async getShareAccount(reqID) {
     let req = await platform.methods.requestsID(reqID).call()
     let SA = await platform.methods.ipfsOwner(req.).call()
@@ -97,12 +126,13 @@ class PendingList extends Component {
               <th scope="col">column</th>
               <th scope="col">privacy</th>
               <th scope="col">Sharer file</th>
+              <th scope="col">Upload result</th>
             </tr>
           </thead>
           <tbody id="request">
             { this.state.requests.map((request, key) => {
               return(
-                <tr key={key}>
+                <tr key={key} style = {{border:"solid"}}>
                   <th scope="row">{request.ID.toString()} </th>
                   <td>
                     <button onClick = {()=>this.load(request.ipfsHash)}>Downlod file</button>
@@ -111,6 +141,13 @@ class PendingList extends Component {
                   <td>{request.privacyRequirement.toString()}</td>
                   <td>
                     <button onClick = {()=>this.load(request.ipfsHashShare)}>Downlod file</button>
+                  </td>
+                  <td>
+                    <form onSubmit = {(event)=>this.onSubmit(event,request.ID)} >
+                      <input type = 'file' onChange = {this.captureFile}/>
+                      <br/>
+                      <input type = 'submit' />
+                    </form>
                   </td>
                 </tr>
               )

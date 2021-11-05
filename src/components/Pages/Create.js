@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import web3 from './web3.js'
-import Nbar from './Nbar.js';
-import platform from './contract/platform.js'
+import web3 from '../Load/web3.js'
+import platform from '../Load/platform.js'
+import Nbar from '../Nbar.js';
 
 class Create extends Component {
 
