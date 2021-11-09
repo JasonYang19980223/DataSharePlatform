@@ -5,7 +5,6 @@ import {
 } from "react-bootstrap";//導入需要的component
 
 export default function Nbar (props) {
-    console.log(props.manager)
     return (
       <Navbar bg="light" expand="lg">
          <Navbar.Brand href="/">Data sharing platform</Navbar.Brand>

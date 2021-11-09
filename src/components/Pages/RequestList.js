@@ -30,12 +30,10 @@ class RequestList extends Component {
 
   async getInit(){
     let reqLen=0;
-    console.log(reqLen)
     reqLen = await platform.methods.datasetCnt().call()
-    console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
-      const request = await platform.methods.requestsID(i).call()
+      const request = await platform.methods.reqInformID(i).call()
       this.setState({
         requests: [...this.state.requests, request]
       })

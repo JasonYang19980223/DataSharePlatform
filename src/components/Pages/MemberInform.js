@@ -45,20 +45,18 @@ class MemberInform extends Component {
 
 
     let reqLen=0;
-    console.log(reqLen)
     reqLen = await platform.methods.datasetCnt().call()
     console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
-      const request = await platform.methods.requestsID(i).call()
-      console.log('b')
-      let key = request.ipfsHash
-      let address = await platform.methods.ipfsOwner(key).call()
+      let request = await platform.methods.requestsID(i).call()
+      let reqInf = await platform.methods.reqInformID(i).call()
+      let address = request.ownerAddress
       if(address===this.state.account){
         console.log('a')
         console.log(request)
         this.setState({
-          requests: [...this.state.requests, request]
+          requests: [...this.state.requests, [request,reqInf]]
         })
       }
     }
@@ -85,10 +83,10 @@ class MemberInform extends Component {
             { this.state.requests.map((request, key) => {
               return(
                 <tr key={key}>
-                  <th scope="row">{request.ID.toString()} </th>
-                  <td>{request.column}</td>
-                  <td>{request.privacyRequirement.toString()}</td>
-                  <td>{request.ipfsHashResult}</td>
+                  <th scope="row">{request[0].ID.toString()} </th>
+                  <td>{request[1].column}</td>
+                  <td>{request[1].privacyRequirement.toString()}</td>
+                  <td>{request[0].ipfsHashResult}</td>
                 </tr>
               )
             })}

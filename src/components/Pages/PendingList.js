@@ -42,10 +42,12 @@ class PendingList extends Component {
     console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
-      const request = await platform.methods.requestsID(i).call()
+      let request = await platform.methods.requestsID(i).call()
+      let reqInf = await platform.methods.reqInformID(i).call()
       if(request.ipfsHashShare!==''){
+        console.log('aaa')
         this.setState({
-          requests: [...this.state.requests, request]
+          requests: [...this.state.requests, [request,reqInf]]
         })
       }
     }
@@ -107,11 +109,6 @@ class PendingList extends Component {
     await platform.methods.uploadResultFile(rid,ipfsHash).send({ from: this.state.account })
   }
 
-  /**async getShareAccount(reqID) {
-    let req = await platform.methods.requestsID(reqID).call()
-    let SA = await platform.methods.ipfsOwner(req.).call()
-  }**/
-
   render() {
     return (
       <div>
@@ -133,17 +130,17 @@ class PendingList extends Component {
             { this.state.requests.map((request, key) => {
               return(
                 <tr key={key} style = {{border:"solid"}}>
-                  <th scope="row">{request.ID.toString()} </th>
+                  <th scope="row">{request[0].ID.toString()} </th>
                   <td>
-                    <button onClick = {()=>this.load(request.ipfsHash)}>Downlod file</button>
+                    <button onClick = {()=>this.load(request[0].ipfsHash)}>Downlod file</button>
                   </td>
-                  <td>{request.column}</td>
-                  <td>{request.privacyRequirement.toString()}</td>
+                  <td>{request[1].column}</td>
+                  <td>{request[1].privacyRequirement.toString()}</td>
                   <td>
-                    <button onClick = {()=>this.load(request.ipfsHashShare)}>Downlod file</button>
+                    <button onClick = {()=>this.load(request[0].ipfsHashShare)}>Downlod file</button>
                   </td>
                   <td>
-                    <form onSubmit = {(event)=>this.onSubmit(event,request.ID)} >
+                    <form onSubmit = {(event)=>this.onSubmit(event,request[0].ID)} >
                       <input type = 'file' onChange = {this.captureFile}/>
                       <br/>
                       <input type = 'submit' />

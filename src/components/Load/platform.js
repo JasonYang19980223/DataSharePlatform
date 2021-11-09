@@ -30,7 +30,7 @@ import Platform from '../../abis/Platform.json';
 
 const platform =new web3.eth.Contract(
     Platform.abi,
-    '0x5e8ef37E433562E8a3677a7cCc64A7f53A42d819'
+    '0x27c2F71BB13A059aDf2fe757a349a4801109277B'
 );
 
 export default platform;
