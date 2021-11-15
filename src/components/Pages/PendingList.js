@@ -44,10 +44,11 @@ class PendingList extends Component {
     for (var i = 1; i <= reqLen; i++) {
       let request = await platform.methods.requestsID(i).call()
       let reqInf = await platform.methods.reqInformID(i).call()
+      let share = await platform.methods.shaInformID(await platform.methods.reqToSha(i).call()).call()
       if(request.ipfsHashShare!==''){
         console.log('aaa')
         this.setState({
-          requests: [...this.state.requests, [request,reqInf]]
+          requests: [...this.state.requests, [request,reqInf,share]]
         })
       }
     }
@@ -120,14 +121,29 @@ class PendingList extends Component {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Requester file</th>
-              <th scope="col">column</th>
-              <th scope="col">privacy</th>
+              <th scope="col">Request column</th>
+              <th scope="col">Request privacy</th>
               <th scope="col">Sharer file</th>
+              <th scope="col">Share column</th>
+              <th scope="col">Share privacy</th>
               <th scope="col">Upload result</th>
             </tr>
           </thead>
           <tbody id="request">
             { this.state.requests.map((request, key) => {
+              let result
+              if(request[0].ipfsHashResult===''){
+                result=<td>
+                    <form onSubmit = {(event)=>this.onSubmit(event,request[0].ID)} >
+                      <input type = 'file' onChange = {this.captureFile}/>
+                      <br/>
+                      <input type = 'submit' />
+                    </form>
+                  </td>
+              }
+              else{
+                result = <td>Done</td>
+              }
               return(
                 <tr key={key} style = {{border:"solid"}}>
                   <th scope="row">{request[0].ID.toString()} </th>
@@ -139,13 +155,9 @@ class PendingList extends Component {
                   <td>
                     <button onClick = {()=>this.load(request[0].ipfsHashShare)}>Downlod file</button>
                   </td>
-                  <td>
-                    <form onSubmit = {(event)=>this.onSubmit(event,request[0].ID)} >
-                      <input type = 'file' onChange = {this.captureFile}/>
-                      <br/>
-                      <input type = 'submit' />
-                    </form>
-                  </td>
+                  <td>{request[2].column}</td>
+                  <td>{request[2].privacyRequirement.toString()}</td>
+                  {result}
                 </tr>
               )
             })}

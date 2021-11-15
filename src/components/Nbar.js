@@ -3,6 +3,7 @@ import {
  Navbar,
  Nav,
 } from "react-bootstrap";//導入需要的component
+import { NavLink } from 'react-router-dom';
 
 export default function Nbar (props) {
     return (
@@ -11,11 +12,11 @@ export default function Nbar (props) {
          <Navbar.Toggle aria-controls="basic-navbar-nav" />
          <Navbar.Collapse id="basic-navbar-nav">
            <Nav className="mr-auto">
-              <Nav.Link href="/CreatePage">Create member</Nav.Link>
-              <Nav.Link href="/Request">Data Request</Nav.Link>
-              <Nav.Link href="/MemberInform">Member information</Nav.Link>
-              <Nav.Link href="/RequestList">Request list</Nav.Link>
-              {props.manager&&<Nav.Link href="/PendingList">Pending list</Nav.Link>}
+              <NavLink to="/CreatePage" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Create member</NavLink>
+              <NavLink to="/Request" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Data Request</NavLink>
+              <NavLink to="/MemberInform" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Member information</NavLink>
+              <NavLink to="/RequestList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Request list</NavLink>
+              {props.manager&&<NavLink to="/PendingList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Pending list</NavLink>}
            </Nav>
             <ul className="navbar-nav px-3">
               <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">

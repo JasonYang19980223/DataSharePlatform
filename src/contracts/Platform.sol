@@ -4,13 +4,13 @@ contract Platform {
     //平台管理者帳號
     address public manager;
     
-    //計算資料要求的總數，當作ID
+    //計算資料要求的總數，當作資料要求的ID
     uint public datasetCnt =0;
     
-    //計算資料分享的總數，當作ID
+    //計算資料分享的總數，當作資料分享的ID
     uint public sharesetCnt =0;
     
-    //初始化平台管理者
+    //初始化平台管理者地址
     constructor(){
         manager = msg.sender;
     }
@@ -23,7 +23,7 @@ contract Platform {
         address addr;
     }
     
-    //資料表需求/分享的架構
+    //資料表（需求/分享）的架構
     struct Dataset{
         uint ID;
         string ipfsHash;
@@ -32,7 +32,7 @@ contract Platform {
         address ownerAddress;
     }
 
-    //資料表需求/分享的描述
+    //資料表（需求/分享）的描述
     struct DatasetInform{
         uint ID;
         string column;
@@ -65,6 +65,9 @@ contract Platform {
     
     //資料表需求和描述的ID
     mapping (uint => DatasetInform) public reqInformID;
+
+    //資料表需求和描述的ID->資料表分享和描述的ID
+    mapping (uint => uint) public reqToSha;
     
     //分享資料表結構的ID
     mapping (uint => Dataset) public sharesID;
@@ -173,7 +176,7 @@ contract Platform {
         
         ipfsOwner[_ipfsHash] = msg.sender;
         requestsID[reqid].ipfsHashShare=_ipfsHash;
-        
+        reqToSha[reqid]=sha.ID;
         emit createShaEvent(
             _ipfsHash,
             msg.sender

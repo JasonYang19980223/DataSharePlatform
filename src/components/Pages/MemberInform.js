@@ -53,6 +53,7 @@ class MemberInform extends Component {
       let reqInf = await platform.methods.reqInformID(i).call()
       let address = request.ownerAddress
       if(address===this.state.account){
+        if(request.ipfsHashResult==='') request.ipfsHashResult="waiting"
         console.log('a')
         console.log(request)
         this.setState({

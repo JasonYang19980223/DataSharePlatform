@@ -33,10 +33,14 @@ class RequestList extends Component {
     reqLen = await platform.methods.datasetCnt().call()
 
     for (var i = 1; i <= reqLen; i++) {
-      const request = await platform.methods.reqInformID(i).call()
-      this.setState({
-        requests: [...this.state.requests, request]
-      })
+      const request = await platform.methods.requestsID(i).call()
+      const reqinfo = await platform.methods.reqInformID(i).call()
+      let address = request.ownerAddress
+      if(address!==this.state.account){
+        this.setState({
+          requests: [...this.state.requests, [request,reqinfo]]
+        })
+      }
     }
   }
 
@@ -68,20 +72,27 @@ class RequestList extends Component {
           </thead>
           <tbody id="request">
             { this.state.requests.map((request, key) => {
-              return(
-                <tr key={key}>
-                  <th scope="row">{request.ID.toString()} </th>
-                  <td>{request.ownerAddress}</td>
-                  <td>{request.column}</td>
-                  <td>{request.privacyRequirement.toString()}</td>
-                  <td>
+              let share
+              if(request[0].ipfsHashResult===''){
+                share=<td>
                     <input
                       type="button"
                       value="Data Share"
                       style={{cursor:'pointer'}}
-                      onClick={()=>this.handleClick(request.ID)}
+                      onClick={()=>this.handleClick(request[0].ID)}
                     />
                   </td>
+              }
+              else{
+                share = <td>Done</td>
+              }
+              return(
+                <tr key={key}>
+                  <th scope="row">{request[0].ID.toString()} </th>
+                  <td>{request[0].ownerAddress}</td>
+                  <td>{request[1].column}</td>
+                  <td>{request[1].privacyRequirement.toString()}</td>
+                  {share}
                 </tr>
               )
             })}
