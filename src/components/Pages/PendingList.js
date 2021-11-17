@@ -148,12 +148,12 @@ class PendingList extends Component {
                 <tr key={key} style = {{border:"solid"}}>
                   <th scope="row">{request[0].ID.toString()} </th>
                   <td>
-                    <button onClick = {()=>this.load(request[0].ipfsHash)}>Downlod file</button>
+                    <button onClick = {()=>this.load(request[0].ipfsHash)}>Downlod request</button>
                   </td>
                   <td>{request[1].column}</td>
                   <td>{request[1].privacyRequirement.toString()}</td>
                   <td>
-                    <button onClick = {()=>this.load(request[0].ipfsHashShare)}>Downlod file</button>
+                    <button onClick = {()=>this.load(request[0].ipfsHashShare)}>Downlod share</button>
                   </td>
                   <td>{request[2].column}</td>
                   <td>{request[2].privacyRequirement.toString()}</td>
