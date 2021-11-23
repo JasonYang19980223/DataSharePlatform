@@ -1,5 +1,5 @@
-const Platform = artifacts.require("Platform");
+const DSPF = artifacts.require("DSPF");
 
 module.exports = function(deployer) {
-  deployer.deploy(Platform);
+  deployer.deploy(DSPF);
 };

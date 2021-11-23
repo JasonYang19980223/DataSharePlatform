@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import HomePage from './components/Pages/HomePage';
 import CreatePage from "./components/Pages/CreatePage";
-import Request from "./components/Pages/Request";
+import Request from "./components/Pages/CreateCooperation";
 import MemberInform from "./components/Pages/MemberInform";
 import RequestList from "./components/Pages/RequestList";
 import Upload from "./components/Pages/Upload";
@@ -17,7 +17,7 @@ export default class Routes extends Component {
                 <Switch>
                     <Route path="/" exact component={HomePage} />
                     <Route path="/CreatePage" component={CreatePage} />
-                    <Route path="/Request" component={Request} />
+                    <Route path="/CreateCooperation" component={Request} />
                     <Route path="/MemberInform" component={MemberInform} />
                     <Route path="/RequestList" component={RequestList} />
                     <Route path="/PendingList" component={PendingList} />

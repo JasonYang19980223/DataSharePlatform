@@ -9,7 +9,7 @@ class Create extends Component {
     super(props)
     this.state = {
       account: '',
-      name:'',
+      orgnizationName:'',
       phone:'',
       email:'',
       address:''
@@ -49,8 +49,8 @@ class Create extends Component {
   }
 
   async handleClick(e) {
-    await platform.methods.createMember(this.state.name,this.state.email,this.state.phone).send({ from: this.state.account })
-    console.log(this.state.name);
+    await platform.methods.createMember(this.state.orgnizationName,this.state.email,this.state.phone).send({ from: this.state.account })
+    console.log(this.state.orgnizationName);
   }
 
   render() {
@@ -62,7 +62,7 @@ class Create extends Component {
         <Nbar account={this.state.account} manager ={this.state.manager}/>
         <form style={{margin:'5px'}}>
           <label>
-            <input type="text" placeholder="name" style={styleInput} onChange={ this.handleName } />
+            <input type="text" placeholder="orginization name" style={styleInput} onChange={ this.handleName } />
           </label>
           <br/>
           <label>

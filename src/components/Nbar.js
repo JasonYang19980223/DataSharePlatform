@@ -13,7 +13,7 @@ export default function Nbar (props) {
          <Navbar.Collapse id="basic-navbar-nav">
            <Nav className="mr-auto">
               <NavLink to="/CreatePage" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Create member</NavLink>
-              <NavLink to="/Request" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Data Request</NavLink>
+              <NavLink to="/CreateCooperation" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Create Cooperation</NavLink>
               <NavLink to="/MemberInform" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Member information</NavLink>
               <NavLink to="/RequestList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Request list</NavLink>
               {props.manager&&<NavLink to="/PendingList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Pending list</NavLink>}
