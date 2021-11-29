@@ -8,11 +8,11 @@ class MemberInform extends Component {
   constructor(props){
     super(props)
     this.state = {
-      account: '',
+      account:'',
       name:'',
       phone:'',
       email:'',
-      requests:[],
+      datasets:[],
       isLogIn:''
     }
   }
@@ -49,15 +49,14 @@ class MemberInform extends Component {
     console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
-      let request = await platform.methods.requestsID(i).call()
-      let reqInf = await platform.methods.reqInformID(i).call()
-      let address = request.ownerAddress
+      let dataset = await platform.methods.datasets(i).call()
+      let address = dataset.ownerAddress
       if(address===this.state.account){
-        if(request.ipfsHashResult==='') request.ipfsHashResult="waiting"
+        if(dataset.ipfsHashResult==='') dataset.ipfsHashResult="waiting"
         console.log('a')
-        console.log(request)
+        console.log(dataset)
         this.setState({
-          requests: [...this.state.requests, [request,reqInf]]
+          datasets: [...this.state.datasets, dataset]
         })
       }
     }
@@ -75,19 +74,19 @@ class MemberInform extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">column</th>
+              <th scope="col">data</th>
               <th scope="col">privacy</th>
               <th scope="col">result</th>
             </tr>
           </thead>
           <tbody id="request">
-            { this.state.requests.map((request, key) => {
+            { this.state.datasets.map((dataset, key) => {
               return(
                 <tr key={key}>
-                  <th scope="row">{request[0].ID.toString()} </th>
-                  <td>{request[1].column}</td>
-                  <td>{request[1].privacyRequirement.toString()}</td>
-                  <td>{request[0].ipfsHashResult}</td>
+                  <th scope="row">{dataset.datasetID.toString()} </th>
+                  <td>dataset name</td>
+                  <td>{dataset.privacy.toString()}</td>
+                  <td>{dataset.ipfsHash}</td>
                 </tr>
               )
             })}

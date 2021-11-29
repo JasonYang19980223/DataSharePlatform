@@ -29,6 +29,8 @@ class Request extends Component {
     this.show = this.show.bind(this);
   }
 
+
+
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
@@ -110,13 +112,22 @@ class Request extends Component {
     const ipfsHash = file.path
     this.setState({ipfsHash})
     console.log(this.state.ipfsHash)
+    platform.events.createCooperationEvent({})
+      .on('data',async event=>{
+        let cooperation = event.returnValues;
+        console.log(cooperation.target)
+        await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,cooperation.cooperationID).send({from:this.state.account})
+      }
+    )
     await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
-    await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy).send({from:this.state.account})
+    
   }
 
   async handleClick(e) {
-    await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
-    await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy).send({from:this.state.account})
+    let cooperation=await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
+    console.log(cooperation.target)
+    console.log(cooperation.cooperationID)
+    await platform.methods.uploadDataset(cooperation.cooperationID,this.state.ipfs,this.state.privacy).send({from:this.state.account})
   }
 
   show(){
@@ -133,53 +144,61 @@ class Request extends Component {
     return (
       <div>
         <Nbar account={this.state.account} manager={this.state.manager}/>
-        <div style={{margin:'5px'}}>
-        <h2> Create cooperation </h2>
-          <label>
-            <input type="text" placeholder="target" style={styleInput} onChange={ this.handleTarget } />
-          </label>
-          <br/>
-          <h2> Upload Dataset </h2>  
-          {this.state.columns.map((val,idx)=>{
-            return(
-              <div key={val.index}>
-                <div className="col-row" >
-                  <label>
-                    <input type="text" placeholder="column" style={styleInput} onChange={(event)=>this.handleCol(idx,event)} />
-                  </label>
-                </div>
-                <div className ="col p-4">
-                  {idx===0?(
-                    <button
-                      onClick={() => this.addCol(idx)}
-                      type="button"
-                      className="btn btn-primary text-center"
-                    >
-                      add column
-                    </button>
-                    ):(
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => this.clickOnDelete(val)}
-                      >
-                        delete column
-                      </button>
-                    )}
-                </div>
-               </div>
-            )
-          })}
-          <label>
-            <input type="text" placeholder="privacy" style={styleInput} onChange={ this.handlePrivacy } />
-          </label>
-          <br/>
+        <div>
           <div>
-            <h2> Upload File </h2>
-            <form onSubmit = {this.onSubmit} >
-              <input type = 'file' onChange = {this.captureFile}/>
-              <input type = 'submit' />
-            </form>
-          </div>
+            <h2> Create cooperation </h2>
+              <label>
+                <input type="text" placeholder="target" style={styleInput} onChange={ this.handleTarget } />
+              </label>
+              <br/>
+              <br/>
+              <br/>
+          </div>    
+          <div>
+            <h2> Upload Dataset </h2>  
+            {this.state.columns.map((val,idx)=>{
+              return(
+                <div key={val.index}>
+                  <div className="col-row" >
+                    <label>
+                      <input type="text" placeholder="column" style={styleInput} onChange={(event)=>this.handleCol(idx,event)} />
+                    </label>
+                  </div>
+                  <div className ="col p-4">
+                    {idx===0?(
+                      <button
+                        onClick={() => this.addCol(idx)}
+                        type="button"
+                        className="btn btn-primary text-center"
+                      >
+                        add column
+                      </button>
+                      ):(
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => this.clickOnDelete(val)}
+                        >
+                          delete column
+                        </button>
+                      )}
+                  </div>
+                </div>
+              )
+            })}
+            <label>
+              <input type="text" placeholder="privacy" style={styleInput} onChange={ this.handlePrivacy } />
+            </label>
+            <br/>
+            <br/>
+            <br/>
+        </div>
+        <div>
+          <h2> Upload File </h2>
+          <form onSubmit = {this.onSubmit} >
+            <input type = 'file' onChange = {this.captureFile}/>
+            <input type = 'submit' />
+          </form>
+
           {/* <label>
             <input
               type="button"
@@ -196,6 +215,7 @@ class Request extends Component {
               onClick={this.show}
             />
           </label>
+          </div>
         </div>
       </div>
     );

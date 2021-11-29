@@ -33,7 +33,7 @@ class Create extends Component {
   }
 
   handleName(e) {
-    this.setState({name: e.target.value});
+    this.setState({orgnizationName: e.target.value});
   }
 
   handlePhone(e) {

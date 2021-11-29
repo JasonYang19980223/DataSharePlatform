@@ -15,7 +15,7 @@ export default function Nbar (props) {
               <NavLink to="/CreatePage" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Create member</NavLink>
               <NavLink to="/CreateCooperation" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Create Cooperation</NavLink>
               <NavLink to="/MemberInform" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Member information</NavLink>
-              <NavLink to="/RequestList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Request list</NavLink>
+              <NavLink to="/CooperationList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Cooperation list</NavLink>
               {props.manager&&<NavLink to="/PendingList" activeStyle={{color:"blue"}} style={{color:"black",margin:"5px"}}>Pending list</NavLink>}
            </Nav>
             <ul className="navbar-nav px-3">

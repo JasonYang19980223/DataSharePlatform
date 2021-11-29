@@ -35,7 +35,7 @@ class CreatePage extends Component {
     this.setState({isLogIn:log})
     if(this.state.isLogIn){
       let mem = await platform.methods.members(this.state.account).call()
-      this.setState({name:mem.name})
+      this.setState({name:mem.orgnizationName})
       this.setState({phone:mem.phone})
       this.setState({email:mem.email})
     }

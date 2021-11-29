@@ -13,7 +13,7 @@ class PendingList extends Component {
     super(props)
     this.state = {
       account: '',
-      requests:[],
+      cooperations:[],
       isLogIn:'',
       manager:true
     }
@@ -42,13 +42,11 @@ class PendingList extends Component {
     console.log(reqLen)
 
     for (var i = 1; i <= reqLen; i++) {
-      let request = await platform.methods.requestsID(i).call()
-      let reqInf = await platform.methods.reqInformID(i).call()
-      let share = await platform.methods.shaInformID(await platform.methods.reqToSha(i).call()).call()
-      if(request.ipfsHashShare!==''){
+      let cooperation = await platform.methods.cooperationID(i).call()
+      if(!cooperation.getResult){
         console.log('aaa')
         this.setState({
-          requests: [...this.state.requests, [request,reqInf,share]]
+          cooperations: [...this.state.cooperations, cooperation]
         })
       }
     }
@@ -120,21 +118,17 @@ class PendingList extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Requester file</th>
-              <th scope="col">Request column</th>
-              <th scope="col">Request privacy</th>
-              <th scope="col">Sharer file</th>
-              <th scope="col">Share column</th>
-              <th scope="col">Share privacy</th>
-              <th scope="col">Upload result</th>
+              <th scope="col">Cooperation Name</th>
+              <th scope="col">Target</th>
+              <th scope="col">data</th>
             </tr>
           </thead>
           <tbody id="request">
-            { this.state.requests.map((request, key) => {
+            { this.state.cooperations.map((cooperation, key) => {
               let result
-              if(request[0].ipfsHashResult===''){
+              if(cooperation.getResult){
                 result=<td>
-                    <form onSubmit = {(event)=>this.onSubmit(event,request[0].ID)} >
+                    <form onSubmit = {(event)=>this.onSubmit(event,cooperation.cooperationID)} >
                       <input type = 'file' onChange = {this.captureFile}/>
                       <br/>
                       <input type = 'submit' />
@@ -146,18 +140,19 @@ class PendingList extends Component {
               }
               return(
                 <tr key={key} style = {{border:"solid"}}>
-                  <th scope="row">{request[0].ID.toString()} </th>
+                  <th scope="row">{cooperation.cooperationID.toString()} </th>
+                  {/* <td>
+                    <button onClick = {()=>this.load(cooperation.ipfsHash)}>Downlod request</button>
+                  </td> */}
+                  <td>"cooperation name"</td>
+                  <td>{cooperation.target}</td>
+                  {/* <td>{cooperation.privacyRequirement.toString()}</td>
                   <td>
-                    <button onClick = {()=>this.load(request[0].ipfsHash)}>Downlod request</button>
+                    <button onClick = {()=>this.load(cooperation.ipfsHashShare)}>Downlod share</button>
                   </td>
-                  <td>{request[1].column}</td>
-                  <td>{request[1].privacyRequirement.toString()}</td>
-                  <td>
-                    <button onClick = {()=>this.load(request[0].ipfsHashShare)}>Downlod share</button>
-                  </td>
-                  <td>{request[2].column}</td>
-                  <td>{request[2].privacyRequirement.toString()}</td>
-                  {result}
+                  <td>{cooperation.column}</td>
+                  <td>{cooperation.privacyRequirement.toString()}</td>
+                  {result} */}
                 </tr>
               )
             })}
