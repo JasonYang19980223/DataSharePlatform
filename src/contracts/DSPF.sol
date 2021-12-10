@@ -10,9 +10,6 @@ contract DSPF {
     //計算資料申請的總數，當作資料要求的ID
     uint public cooperationCnt =0;
     
-    //計算資料結果的總數，當作資料結果的ID
-    uint public resultsetCnt =0;
-    
     //初始化平台管理者地址
     constructor(){
         manager = msg.sender;
@@ -24,35 +21,28 @@ contract DSPF {
         string email;
         string phone;
         address addr;
+        uint cooCnt;
     }
     
-    //資料表的架構
+    //資料欄位的架構
     struct Dataset{
         uint cooperationID;
         uint datasetID;
-        uint privacy;
         string ipfsHash;
-        bool getResult;
         address ownerAddress;
+        uint colCnt;
     }
 
-    //分享
+    //合作的架構
     struct Cooperation{
         uint cooperationID;
         string target;
-        string resultDataset;
+        string miningFun;
         address host;
         uint memCnt;
-        mapping(uint => Mem) mems;
-    }
-
-    
-    struct ResultDataset{
-        uint resultID;
-        uint cooperationID;
-        string ipfsHashResult;
-    }
-    
+        uint dataCnt;
+        bool getResult;
+    }  
 
     //判斷是否為成員
     modifier memberOnly{
@@ -66,7 +56,7 @@ contract DSPF {
         _;
     }
     
-    //位址對應成員的map
+    //位址對應成員
     mapping (address => Mem) public members;
     
     //判斷該位址是否已成為成員
@@ -75,17 +65,20 @@ contract DSPF {
     //資料表的ID
     mapping (uint => Dataset) public datasets;
 
-
-    mapping (uint => ResultDataset) public results;
+    //資料表的欄位
+    mapping (uint =>mapping (uint => string)) public datasetsCol;
     
-    
+    //合作的ID
     mapping (uint => Cooperation) public cooperations;
-    
-    mapping (uint => string[]) public colByDataset;
-    
-    // mapping (uint => Mem[]) public cooperationMem;
 
-    // mapping (uint => string[]) public cooperationFile;
+    //合作的成員
+    mapping (uint =>mapping (uint => Mem)) public cooperationMems;
+    
+    //合作的資料欄位集
+    mapping (uint =>mapping (address => Dataset)) public cooperationDatas;
+
+    //成員參與的合作
+    mapping (address => mapping (uint => Cooperation)) public memberCooperations;
 
     event createMemEvent(
         string orgnizationName,
@@ -94,37 +87,52 @@ contract DSPF {
         address addr
     );
     
-    event uploaDatesetEvent(
+    event setDatesetEvent(
         uint _cooperationID,
         uint datasetID,
-        string ipfsHash,
         address ownerAddress
     );
     
     event createCooperationEvent(
         uint cooperationID,
         string target,
-        address ownerAddress,
+        string miningFun,
         string hostName
     );
 
-    event uploadResEvent(
-        uint resultID,
-        uint cooperationID,
-        string ipfsHashResult
+    event addMem(
+        uint memCnt,
+        string memName
+    );
+
+    event addData(
+        uint datasetID,
+        string col
+    );
+
+    event getData(
+        string col
+    );
+
+    event setData(
+        string col
     );
     
     //新增成員
     function createMember(string memory _orgnizationName, string memory _email, string memory _phone)public{
-        Mem memory m;
-        m = Mem({
+        //設定位址對應成員實體
+        members[msg.sender] = Mem({
             orgnizationName: _orgnizationName,
             email: _email,
             phone:_phone,
-            addr: msg.sender
+            addr: msg.sender,
+            cooCnt:0
         });
-        members[msg.sender] = m;
+
+        //設定位址成為成員
         memberCheck[msg.sender]=true;
+        
+        //新增成員的log
         emit createMemEvent(
             _orgnizationName,
             _email,
@@ -134,110 +142,94 @@ contract DSPF {
     }
       
     //新增資料表
-    function uploadDataset(string memory _ipfsHash ,uint _privacy,uint _cooperationID) public memberOnly{
-        Dataset memory dataset;
-        datasetCnt++;
-        
-        dataset=Dataset({
+    function setDataset(uint _cooperationID) public memberOnly{
+        datasets[datasetCnt]=Dataset({
             cooperationID:_cooperationID,
-            datasetID : datasetCnt,
-            ipfsHash : _ipfsHash,
-            privacy:_privacy,
-            getResult : false,
-            ownerAddress :msg.sender
+            datasetID:datasetCnt,
+            ipfsHash:'',
+            ownerAddress:msg.sender,
+            colCnt:0
         });
-        // addCooperationMem(_cooperationID, members[msg.sender]);
-        // addCooperationFile(_cooperationID,dataset.ipfsHash);
-        datasets[dataset.datasetID] = dataset;
         
-        emit uploaDatesetEvent(
-            _cooperationID,
-            dataset.datasetID,
-            _ipfsHash,
+
+        cooperationDatas[_cooperationID][msg.sender]=datasets[datasetCnt];
+        cooperations[_cooperationID].dataCnt++;
+        emit setDatesetEvent(
+            datasets[datasetCnt].cooperationID,
+            datasets[datasetCnt].datasetID,
             msg.sender
         );
+        datasetCnt=datasetCnt+1;
+    }
+
+    function getColumn(uint _datasetID,uint _dataIdx) public view returns(string memory){
+        return datasetsCol[_datasetID][_dataIdx];
     }
 
     function addColumn(uint _datasetID,string memory _col) public {
-        colByDataset[_datasetID].push(_col);
+        datasetsCol[_datasetID][datasets[_datasetID].colCnt]=_col;
+        datasets[_datasetID].colCnt++;
     }
     
     
-    function createCooperation( string memory _target) public {
-        cooperationCnt++;
-        Cooperation storage coo = cooperations[cooperationCnt];
-        //Initialize
-        coo.cooperationID=cooperationCnt;
-        coo.target=_target;
-        coo.resultDataset='';
-        coo.host=msg.sender;
-        coo.memCnt=0;
-        coo.mems[coo.memCnt]=members[msg.sender];
-
+    function createCooperation( string memory _target,string memory _miningFun) public memberOnly{
+        cooperations[cooperationCnt] = Cooperation({
+            cooperationID:cooperationCnt,
+            target:_target,
+            host:msg.sender,
+            memCnt : 0,
+            dataCnt : 0,
+            miningFun : _miningFun,
+            getResult:false
+        });
+        memberCooperations[msg.sender][members[msg.sender].cooCnt]=cooperations[cooperationCnt];
+        members[msg.sender].cooCnt++;
+        cooperationMems[cooperationCnt][0] = members[msg.sender];
+        cooperations[cooperationCnt].memCnt++;
+        
         emit createCooperationEvent(
-            coo.cooperationID,
-            coo.target,
-            coo.host,
-            coo.mems[coo.memCnt].orgnizationName
+            cooperations[cooperationCnt].cooperationID,
+            cooperations[cooperationCnt].target,
+            cooperations[cooperationCnt].miningFun,
+            cooperationMems[cooperationCnt][0].orgnizationName
         );
+        cooperationCnt=cooperationCnt+1;
     }
 
     function getCooMemName(uint _cooperationID,uint _memIdx) public view returns(string memory){
-        Cooperation storage coo = cooperations[_cooperationID];
-        return coo.mems[_memIdx].orgnizationName;
+        return cooperationMems[_cooperationID][_memIdx].orgnizationName;
     }
     
     function getCooMemPhone(uint _cooperationID,uint _memIdx) public view returns(string memory){
-        Cooperation storage coo = cooperations[_cooperationID];
-        return coo.mems[_memIdx].phone;
+        return cooperationMems[_cooperationID][_memIdx].phone;
     }
 
     function getCooMemEmail(uint _cooperationID,uint _memIdx) public view returns(string memory){
-        Cooperation storage coo = cooperations[_cooperationID];
-        return coo.mems[_memIdx].email;
+        return cooperationMems[_cooperationID][_memIdx].email;
     }
 
     function getCooMemAddr(uint _cooperationID,uint _memIdx) public view returns(address){
-        Cooperation storage coo = cooperations[_cooperationID];
-        return coo.mems[_memIdx].addr;
-    }
-    
-    event addMem(
-        uint memCnt,
-        string memName
-    );
-    function addCooperationMem(uint _cooperationID) public {
-        cooperations[_cooperationID].memCnt++;
-        cooperations[_cooperationID].mems[cooperations[_cooperationID].memCnt]=members[msg.sender];
-        emit addMem(
-            cooperations[_cooperationID].memCnt,
-            cooperations[_cooperationID].mems[cooperations[_cooperationID].memCnt].orgnizationName
-        );
-    }
-    
-    
-    // function addCooperationFile(uint _cooperationID,string memory _ipfs) public {
-    //     cooperationFile[_cooperationID].push(_ipfs);
-    // }
-    
-    function uploadResultFile(uint _cooperationID ,string memory _ipfsHash) public managerOnly{
-        ResultDataset memory RD;
-        resultsetCnt++;
-        RD=ResultDataset({
-            resultID:resultsetCnt,
-            cooperationID:_cooperationID,
-            ipfsHashResult:_ipfsHash
-        });
-        results[RD.resultID]=RD;
-        cooperations[_cooperationID].resultDataset=_ipfsHash;
-        
-        emit uploadResEvent(
-            RD.resultID,
-            _cooperationID,
-            _ipfsHash
-        );
+        return cooperationMems[_cooperationID][_memIdx].addr;
     }
 
+    function addCooperationMem(uint _cooperationID) public {
+        cooperationMems[_cooperationID][cooperations[_cooperationID].memCnt]=members[msg.sender];
+        memberCooperations[msg.sender][members[msg.sender].cooCnt]=cooperations[_cooperationID];
+        members[msg.sender].cooCnt++;
+        emit addMem(
+            cooperations[_cooperationID].memCnt,
+            cooperationMems[_cooperationID][cooperations[_cooperationID].memCnt].orgnizationName
+        );
+        cooperations[_cooperationID].memCnt++;
+    }
+
+    function getDataset(uint _cooperationID,address owner) public view returns(Dataset memory){
+        return datasets[cooperationDatas[_cooperationID][owner].datasetID];
+    }
+
+    function getCooperation(address owner,uint idx) public view returns(Cooperation memory){
+        return memberCooperations[owner][idx];
+    }
     
 }
 

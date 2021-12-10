@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import web3 from '../Load/web3.js'
 import Nbar from '../Nbar.js';
 import platform from '../Load/platform.js'
+import history from '../../History';
 
 class MemberInform extends Component {
   
@@ -12,7 +13,7 @@ class MemberInform extends Component {
       name:'',
       phone:'',
       email:'',
-      datasets:[],
+      cooperations:[],
       isLogIn:''
     }
   }
@@ -42,24 +43,25 @@ class MemberInform extends Component {
     this.setState({ account: accounts[0] })
     let m =await platform.methods.members(this.state.account).call()
     this.setState({ name: m.name })
-
-
-    let reqLen=0;
-    reqLen = await platform.methods.datasetCnt().call()
-    console.log(reqLen)
-
-    for (var i = 1; i <= reqLen; i++) {
-      let dataset = await platform.methods.datasets(i).call()
-      let address = dataset.ownerAddress
-      if(address===this.state.account){
-        if(dataset.ipfsHashResult==='') dataset.ipfsHashResult="waiting"
-        console.log('a')
-        console.log(dataset)
-        this.setState({
-          datasets: [...this.state.datasets, dataset]
-        })
-      }
+    console.log(m.cooCnt)
+    for(let i = 0;i<m.cooCnt;i++){
+      let coo = await platform.methods.getCooperation(this.state.account,i).call()
+      this.setState({
+        cooperations: [...this.state.cooperations,coo]
+      })
     }
+
+  }
+
+  async handleCol(cooID,memaddress) {
+    let path = "/MemberCols"; 
+    history.push({
+      pathname:path,
+      state:{
+        cooperationID:cooID,
+        memberAddress:memaddress
+      }
+    });
   }
 
   render() {
@@ -74,19 +76,26 @@ class MemberInform extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">cooperation</th>
               <th scope="col">data</th>
-              <th scope="col">privacy</th>
               <th scope="col">result</th>
             </tr>
           </thead>
           <tbody id="request">
-            { this.state.datasets.map((dataset, key) => {
+            { this.state.cooperations.map((coo, key) => {
               return(
                 <tr key={key}>
-                  <th scope="row">{dataset.datasetID.toString()} </th>
-                  <td>dataset name</td>
-                  <td>{dataset.privacy.toString()}</td>
-                  <td>{dataset.ipfsHash}</td>
+                  <th scope="row">{coo.cooperationID}</th>
+                  <td>{coo.target}</td>
+                  <td>                    
+                    <input
+                      type = "button"
+                      value="col"
+                      style={{cursor:'pointer'}}
+                      onClick={()=>this.handleCol(coo.cooperationID,this.state.account)}
+                    />
+                  </td>
+                  <td>waiting</td>
                 </tr>
               )
             })}

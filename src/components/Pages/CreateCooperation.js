@@ -18,12 +18,11 @@ class Request extends Component {
         index:Math.random(),
         colName:''
       }],
-      privacy:0,
-      target:'',
-      ipfs:''
+      miningFunction:'',
+      target:''
     }    
     this.handleCol = this.handleCol.bind(this);
-    this.handlePrivacy = this.handlePrivacy.bind(this);
+    this.handleMiningfun = this.handleMiningfun.bind(this);
     this.handleTarget = this.handleTarget.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.show = this.show.bind(this);
@@ -56,8 +55,8 @@ class Request extends Component {
     this.setState({columns});
   }
 
-  handlePrivacy(e) {
-    this.setState({privacy: parseInt(e.target.value)});
+  handleMiningfun(e) {
+    this.setState({miningFunction:e.target.value});
   }
 
   handleTarget(e) {
@@ -90,50 +89,65 @@ class Request extends Component {
     });
   }
 
-  captureFile = (event) =>{
-    event.preventDefault()
-    //console.log("file capture")
-    //process file for ipfs
-    const file = event.target.files[0]
-    const reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
-    reader.onloadend = () => {
-      this.setState({buffer:Buffer(reader.result)})
-      console.log('buffer',Buffer(reader.result))
-    }
-    console.log(event.target.files)
-  }
+  /***上傳檔案***/
+  // captureFile = (event) =>{
+  //   event.preventDefault()
+  //   //console.log("file capture")
+  //   //process file for ipfs
+  //   const file = event.target.files[0]
+  //   const reader = new window.FileReader()
+  //   reader.readAsArrayBuffer(file)
+  //   reader.onloadend = () => {
+  //     this.setState({buffer:Buffer(reader.result)})
+  //     console.log('buffer',Buffer(reader.result))
+  //   }
+  //   console.log(event.target.files)
+  // }
 
-//ex:QmWpV82gZgvbjGbwhp6gYdPFALECDKWjqkRe13LVVa2Z4i
-  onSubmit = async (event) =>{
-    event.preventDefault()
-    console.log("submitting the form")
-    const file=await ipfs.add(this.state.buffer)
-    const ipfsHash = file.path
-    this.setState({ipfsHash})
-    console.log(this.state.ipfsHash)
-    platform.events.createCooperationEvent({})
-      .on('data',async event=>{
-        let cooperation = event.returnValues;
-        console.log(cooperation.target)
-        await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,cooperation.cooperationID).send({from:this.state.account})
-      }
-    )
-    await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
-    
-  }
+
+  // onSubmit = async (event) =>{
+  //   event.preventDefault()
+  //   console.log("submitting the form")
+  //   const file=await ipfs.add(this.state.buffer)
+  //   console.log("submitting the form")
+  //   const ipfsHash = file.path
+  //   console.log("submitting the form")
+  //   this.setState({ipfsHash})
+  //   console.log(this.state.ipfsHash)
+  //   platform.events.createCooperationEvent({})
+  //     .on('data',async event=>{
+  //       let cooperation = event.returnValues;
+  //       console.log(cooperation.target)
+  //       await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,cooperation.cooperationID).send({from:this.state.account})
+  //     }
+  //   )
+  //   await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
+  //   const key = await platform.methods.cooperationCnt().call();
+  //   console.log(key)
+  //   await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,key).send({from:this.state.account})
+  // }
 
   async handleClick(e) {
-    let cooperation=await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
-    console.log(cooperation.target)
-    console.log(cooperation.cooperationID)
-    await platform.methods.uploadDataset(cooperation.cooperationID,this.state.ipfs,this.state.privacy).send({from:this.state.account})
+    await platform.methods.createCooperation(this.state.target,this.state.miningFunction).send({from:this.state.account})
+    let cooid = await platform.methods.cooperationCnt().call()
+    console.log(cooid)
+
+    await platform.methods.setDataset(cooid-1).send({from:this.state.account})
+    console.log(cooid)
+    let dataid = await platform.methods.datasetCnt().call()
+    console.log(dataid)
+    let columns = this.state.columns
+    console.log(columns.length)
+    for( let i = 0 ;i<columns.length;i++){
+      console.log(columns[i]['name'])
+      await platform.methods.addColumn(dataid-1,columns[i]['name']).send({from:this.state.account})
+    }
   }
 
-  show(){
-    let columns = [...this.state.columns];
-    for(let i = 0 ;i<3;i++){
-      console.log(columns[i])
+  async show(){
+    let columns = this.state.columns
+    for( let i = 0 ;i<columns.length;i++){
+      console.log(columns[i]['name'])
     }
   }
 
@@ -151,11 +165,14 @@ class Request extends Component {
                 <input type="text" placeholder="target" style={styleInput} onChange={ this.handleTarget } />
               </label>
               <br/>
+              <label>
+               <input type="text" placeholder="mining function" style={styleInput} onChange={ this.handleMiningfun } />
+              </label>
               <br/>
               <br/>
           </div>    
           <div>
-            <h2> Upload Dataset </h2>  
+            <h2> Set Column </h2>  
             {this.state.columns.map((val,idx)=>{
               return(
                 <div key={val.index}>
@@ -185,28 +202,25 @@ class Request extends Component {
                 </div>
               )
             })}
-            <label>
-              <input type="text" placeholder="privacy" style={styleInput} onChange={ this.handlePrivacy } />
-            </label>
             <br/>
             <br/>
             <br/>
         </div>
         <div>
-          <h2> Upload File </h2>
-          <form onSubmit = {this.onSubmit} >
+          <h2> Upload To Chain </h2>
+          {/* <form onSubmit = {this.onSubmit} >
             <input type = 'file' onChange = {this.captureFile}/>
             <input type = 'submit' />
-          </form>
+          </form> */}
 
-          {/* <label>
+          <label>
             <input
               type="button"
               value="confirm"
               style={{cursor:'pointer'}}
               onClick={this.handleClick}
             />
-          </label> */}
+          </label>
           <label>
             <input
               type="button"

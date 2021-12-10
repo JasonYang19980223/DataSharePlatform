@@ -33,7 +33,8 @@ class RequestList extends Component {
   async getInit(){
     let coolen=0;
     coolen = await platform.methods.cooperationCnt().call()
-    for (var i = 1; i <= coolen; i++) {
+    console.log(coolen)
+    for (var i = 0; i < coolen; i++) {
       const cooperation = await platform.methods.cooperations(i).call()
       const host = await platform.methods.members(cooperation.host).call()
       this.setState({
@@ -53,8 +54,7 @@ class RequestList extends Component {
   }
 
   async handleJoin(cooID) {
-    await platform.methods.addCooperationMem(cooID).send({from:this.state.account})
-    let path = "/UploadShare"; 
+    let path = "/JoinCooperation"; 
     history.push({
       pathname:path,
       state:{

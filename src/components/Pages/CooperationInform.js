@@ -14,8 +14,7 @@ class RequestList extends Component {
       files:[],
       isLogIn:''
     }
-    //this.handleCooperation= this.handleCooperation.bind(this);
-    this.handleJoin= this.handleJoin.bind(this);
+    this.handleCol= this.handleCol.bind(this);
     this.getInit= this.getInit.bind(this);
   }
 
@@ -32,40 +31,29 @@ class RequestList extends Component {
   }
 
   async getInit(){
-    // const results = await platform.getPastEvents(
-    //   'uploaDatesetEvent',
-    //   {
-    //     filter:{
-    //         _cooperationID:this.props.location.state.cooperationID
-    //     },
-    //     fromBlock:0
-    //   }
-    // );
     let cooperation = await platform.methods.cooperations(this.props.location.state.cooperationID).call()
     let memLen = cooperation.memCnt
-    
-    for (var i = 0; i < 2; i++) {
+    console.log(memLen)
+    for (var i = 0; i < memLen; i++) {
       let memName =await platform.methods.getCooMemName(this.props.location.state.cooperationID,i).call()
       let memPhone =await platform.methods.getCooMemPhone(this.props.location.state.cooperationID,i).call()
       let memEmail =await platform.methods.getCooMemEmail(this.props.location.state.cooperationID,i).call()
       let memAddr =await platform.methods.getCooMemAddr(this.props.location.state.cooperationID,i).call()
-
       this.setState({
         mems: [...this.state.mems, [memName,memPhone,memEmail,memAddr]]
       })
     }
   }
 
-  async handleJoin(cooID) {
-    await platform.methods.addCooperationMem(cooID).call()
-    console.log(1)
-    // let path = "/UploadShare"; 
-    // history.push({
-    //   pathname:path,
-    //   state:{
-    //     requestID:reqID
-    //   }
-    // });
+  async handleCol(cooID,memaddress) {
+    let path = "/MemberCols"; 
+    history.push({
+      pathname:path,
+      state:{
+        cooperationID:cooID,
+        memberAddress:memaddress
+      }
+    });
   }
 
   render() {
@@ -81,6 +69,7 @@ class RequestList extends Component {
               <th scope="col">Phone</th>
               <th scope="col">Email</th>
               <th scope="col">Addr</th>
+              <th scope="col">Member Columns</th>
             </tr>
           </thead>
           <tbody id="request">
@@ -108,6 +97,14 @@ class RequestList extends Component {
                   <td>{mem[1]}</td>
                   <td>{mem[2]}</td>
                   <td>{mem[3]}</td>
+                  <td>                    
+                    <input 
+                      type = "button"
+                      value="col"
+                      style={{cursor:'pointer'}}
+                      onClick={()=>this.handleCol(this.props.location.state.cooperationID,mem[3])}
+                    />
+                  </td>
                   {/* <td>{cooperation.column}</td>
                   <td>{cooperation.privacyRequirement.toString()}</td>
                   {share} */}
