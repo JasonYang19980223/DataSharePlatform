@@ -1,8 +1,8 @@
 {
-  "name": "eth-marketplace",
+  "name": "data-share-platform",
   "version": "0.1.0",
-  "description": "An Ethereum Marketplace",
-  "author": "gregory@dappuniversity.com",
+  "description": "an ethereum data share platform",
+  "author": "jason0223yang@gmail.com",
   "dependencies": {
     "babel-loader": "^8.0.4",
     "babel-polyfill": "6.26.0",
