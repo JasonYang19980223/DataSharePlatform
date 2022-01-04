@@ -168,8 +168,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -213,8 +212,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -258,8 +256,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -308,8 +305,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -322,8 +318,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -362,8 +357,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -387,8 +381,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -401,8 +394,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -421,8 +413,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -476,8 +467,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -516,8 +506,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -577,8 +566,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -638,8 +626,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -663,8 +650,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -688,8 +674,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -713,8 +698,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -778,8 +762,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -840,8 +823,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.7.0+commit.9e61f92b\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"datasetID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"col\",\"type\":\"string\"}],\"name\":\"addData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"memCnt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"memName\",\"type\":\"string\"}],\"name\":\"addMem\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"target\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"miningFun\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"hostName\",\"type\":\"string\"}],\"name\":\"createCooperationEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"orgnizationName\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"phone\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"}],\"name\":\"createMemEvent\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"col\",\"type\":\"string\"}],\"name\":\"getData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"col\",\"type\":\"string\"}],\"name\":\"setData\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"datasetID\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"}],\"name\":\"setDatesetEvent\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_datasetID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_col\",\"type\":\"string\"}],\"name\":\"addColumn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"}],\"name\":\"addCooperationMem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cooperationCnt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"cooperationDatas\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"datasetID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"colCnt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"cooperationMems\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"orgnizationName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"phone\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"cooCnt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"cooperations\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"target\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"miningFun\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"host\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"memCnt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dataCnt\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"getResult\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_target\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_miningFun\",\"type\":\"string\"}],\"name\":\"createCooperation\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_orgnizationName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_phone\",\"type\":\"string\"}],\"name\":\"createMember\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"datasetCnt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"datasets\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"datasetID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"colCnt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"datasetsCol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_datasetID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_dataIdx\",\"type\":\"uint256\"}],\"name\":\"getColumn\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_memIdx\",\"type\":\"uint256\"}],\"name\":\"getCooMemAddr\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_memIdx\",\"type\":\"uint256\"}],\"name\":\"getCooMemEmail\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_memIdx\",\"type\":\"uint256\"}],\"name\":\"getCooMemName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_memIdx\",\"type\":\"uint256\"}],\"name\":\"getCooMemPhone\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"idx\",\"type\":\"uint256\"}],\"name\":\"getCooperation\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"target\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"miningFun\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"host\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"memCnt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dataCnt\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"getResult\",\"type\":\"bool\"}],\"internalType\":\"struct DSPF.Cooperation\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"getDataset\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"datasetID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"colCnt\",\"type\":\"uint256\"}],\"internalType\":\"struct DSPF.Dataset\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"manager\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"memberCheck\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"memberCooperations\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"cooperationID\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"target\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"miningFun\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"host\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"memCnt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"dataCnt\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"getResult\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"members\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"orgnizationName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"phone\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"cooCnt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_cooperationID\",\"type\":\"uint256\"}],\"name\":\"setDataset\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/src/contracts/DSPF.sol\":\"DSPF\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/src/contracts/DSPF.sol\":{\"keccak256\":\"0x2a330c9df4e8b6ade838e69bfdb2e2239f22c2c682f21f258041e6eb53ed877e\",\"urls\":[\"bzz-raw://9f442715322354d2c8d81097d645ba4948985558e5233fa0da245a04f97e2a7d\",\"dweb:/ipfs/QmUxahEByJyDT4ca4nGZULvS3sGUmpivAHBnr2bbjCFT3L\"]}},\"version\":1}",
@@ -16204,8 +16186,7 @@
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-25T02:28:57.617Z",
-  "networkType": "ethereum",
+  "updatedAt": "2022-01-04T09:18:29.733Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
