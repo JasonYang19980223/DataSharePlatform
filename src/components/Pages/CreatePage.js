@@ -6,7 +6,6 @@ import Nbar from '../Nbar.js';
 
 
 //********創建成員的介面***********
-
 class CreatePage extends Component {
   //account 使用者的地址
   //manager 發布合約的地址

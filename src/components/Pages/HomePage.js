@@ -3,21 +3,21 @@ import Nbar from '../Nbar.js';
 import web3 from '../Load/web3.js'
 import platform from '../Load/platform.js'
 
-
+//********創建主頁畫面***********
 class HomePage extends Component {
-
+  //account 使用者的地址
   constructor(props){
     super(props)
     this.state = {
-      contract:platform,
       account:''
     }    
   }
 
+  //進入頁面前先進行初始化，用來顯示使用者的地址及確定是否為管理者
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-    const pm = await this.state.contract.methods.manager().call();
+    const pm = await platform.methods.manager().call();
     if(this.state.account === pm){
       this.setState({manager:true});
     }
@@ -25,6 +25,7 @@ class HomePage extends Component {
       this.setState({manager:false});
   }
 
+  //顯示主頁畫面
   render() {
     const imgStyle ={
       display: 'flex',
