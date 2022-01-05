@@ -6,9 +6,12 @@ import platform from '../Load/platform.js'
 
 const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
-class UploadShare extends Component {
+//********加入合作案的介面***********
+class JoinCooperation extends Component {
 
   constructor(props){
+    //account 使用者的地址
+    //columns 組織能提供的欄位
     super(props)
     this.state = {
       account:'',
@@ -18,10 +21,10 @@ class UploadShare extends Component {
       }]
     }    
     this.handleCol = this.handleCol.bind(this);
-
     this.handleClick = this.handleClick.bind(this);
   }
 
+  //進入頁面前先進行初始化，設定使用者地址，並確認是否為管理者
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
@@ -34,6 +37,8 @@ class UploadShare extends Component {
       this.setState({manager:false});
   }
 
+
+  //設定欄位
   handleCol(idx,e) {
     // 1. Make a shallow copy of the items
     let columns = [...this.state.columns];
@@ -47,6 +52,7 @@ class UploadShare extends Component {
     this.setState({columns});
   }
 
+  //新增欄位
   addCol(){
     this.setState(prevState=>({
       columns:[
@@ -59,34 +65,37 @@ class UploadShare extends Component {
     }))
   }
 
-  delCol(index){
-    this.setState({
-      columns:this.setState.columns.filter(
-        (s,sindex)=> index !== sindex
-      )
-    })
-  }
-
+  //刪除欄位
   clickOnDelete(record) {
     this.setState({
       columns: this.state.columns.filter(r => r !== record)
     });
   }
 
-    async handleClick(e) {
+  //送出確認
+  async handleClick(e) {
+    //call 智能合約的 addCooperationMem param: 合作案ID
+    //加入合作案
     await platform.methods.addCooperationMem(this.props.location.state.cooperationID).send({from:this.state.account})
 
+    //call 智能合約的 setDataset param: 設定對應的合作案ID
+    //新增資料集
     await platform.methods.setDataset(this.props.location.state.cooperationID).send({from:this.state.account})
+
+    //call 智能合約的 datasetCnt
+    //判斷資料集ID
     let dataid = await platform.methods.datasetCnt().call()
-    console.log(dataid)
+
+    //紀錄組織能提供的欄位上區塊鏈
     let columns = this.state.columns
-    console.log(columns.length)
     for( let i = 0 ;i<columns.length;i++){
-      console.log(columns[i]['name'])
+      //call 智能合約的 addColumn param: 欄位對應的資料集的ID
+      //設定資料集對應的欄位
       await platform.methods.addColumn(dataid-1,columns[i]['name']).send({from:this.state.account})
     }
   }
 
+  //console顯示設定欄位，用來Debug
   async show(){
     let columns = this.state.columns
     for( let i = 0 ;i<columns.length;i++){
@@ -94,6 +103,8 @@ class UploadShare extends Component {
     }
   }
 
+
+  //顯示輸入框和對應function
   render() {
     const styleInput={
       border:'2px solid'
@@ -139,11 +150,6 @@ class UploadShare extends Component {
         </div>
         <div>
           <h2> Upload To Chain </h2>
-          {/* <form onSubmit = {this.onSubmit} >
-            <input type = 'file' onChange = {this.captureFile}/>
-            <input type = 'submit' />
-          </form> */}
-
           <label>
             <input
               type="button"
@@ -167,4 +173,4 @@ class UploadShare extends Component {
   }
 }
 
-export default UploadShare;
+export default JoinCooperation;

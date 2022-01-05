@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import web3 from '../Load/web3.js'
 import Nbar from '../Nbar.js';
 import platform from '../Load/platform.js'
-import { create } from 'ipfs-http-client'
+//import { create } from 'ipfs-http-client'
 
-
-const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
+//ipfs api
+//const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
 //********創建合作案的介面***********
 class CreateCooperation extends Component {
@@ -89,7 +89,7 @@ class CreateCooperation extends Component {
     });
   }
 
-  //送出
+  //送出確認
   async handleClick(e) {
     //call 智能合約的 createCooperation param: 目標、探勘演算法
     //新增合作案
@@ -104,7 +104,7 @@ class CreateCooperation extends Component {
     await platform.methods.setDataset(cooid-1).send({from:this.state.account})
 
     //call 智能合約的 datasetCnt
-    //
+    //判斷資料集ID
     let dataid = await platform.methods.datasetCnt().call()
   
     //紀錄組織能提供的欄位上區塊鏈
@@ -116,7 +116,7 @@ class CreateCooperation extends Component {
     }
   }
 
-  //顯示設定欄位，用來Debug
+  //console顯示設定欄位，用來Debug
   async show(){
     let columns = this.state.columns
     for( let i = 0 ;i<columns.length;i++){
@@ -182,11 +182,6 @@ class CreateCooperation extends Component {
         </div>
         <div>
           <h2> Upload To Chain </h2>
-          {/* <form onSubmit = {this.onSubmit} >
-            <input type = 'file' onChange = {this.captureFile}/>
-            <input type = 'submit' />
-          </form> */}
-
           <label>
             <input
               type="button"
