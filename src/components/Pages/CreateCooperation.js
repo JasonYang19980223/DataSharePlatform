@@ -7,9 +7,12 @@ import { create } from 'ipfs-http-client'
 
 const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
-
-class Request extends Component {
-
+//********創建合作案的介面***********
+class CreateCooperation extends Component {
+  //account 使用者的地址
+  //columns 組織能提供的欄位
+  //miningFunction 組織選擇的探勘演算法
+  //target 組織想探究的目的
   constructor(props){
     super(props)
     this.state = {
@@ -29,7 +32,7 @@ class Request extends Component {
   }
 
 
-
+  //進入頁面前先進行初始化，設定使用者地址，並確認是否為管理者
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })
@@ -42,6 +45,7 @@ class Request extends Component {
       this.setState({manager:false});
   }
 
+  //設定欄位
   handleCol(idx,e) {
     // 1. Make a shallow copy of the items
     let columns = [...this.state.columns];
@@ -55,14 +59,17 @@ class Request extends Component {
     this.setState({columns});
   }
 
+  //設定探勘演算法
   handleMiningfun(e) {
     this.setState({miningFunction:e.target.value});
   }
 
+  //設定目標
   handleTarget(e) {
     this.setState({target: e.target.value});
   }
 
+  //新增欄位
   addCol(){
     this.setState(prevState=>({
       columns:[
@@ -75,75 +82,41 @@ class Request extends Component {
     }))
   }
 
-  delCol(index){
-    this.setState({
-      columns:this.setState.columns.filter(
-        (s,sindex)=> index !== sindex
-      )
-    })
-  }
-
+  //刪除欄位
   clickOnDelete(record) {
     this.setState({
       columns: this.state.columns.filter(r => r !== record)
     });
   }
 
-  /***上傳檔案***/
-  // captureFile = (event) =>{
-  //   event.preventDefault()
-  //   //console.log("file capture")
-  //   //process file for ipfs
-  //   const file = event.target.files[0]
-  //   const reader = new window.FileReader()
-  //   reader.readAsArrayBuffer(file)
-  //   reader.onloadend = () => {
-  //     this.setState({buffer:Buffer(reader.result)})
-  //     console.log('buffer',Buffer(reader.result))
-  //   }
-  //   console.log(event.target.files)
-  // }
-
-
-  // onSubmit = async (event) =>{
-  //   event.preventDefault()
-  //   console.log("submitting the form")
-  //   const file=await ipfs.add(this.state.buffer)
-  //   console.log("submitting the form")
-  //   const ipfsHash = file.path
-  //   console.log("submitting the form")
-  //   this.setState({ipfsHash})
-  //   console.log(this.state.ipfsHash)
-  //   platform.events.createCooperationEvent({})
-  //     .on('data',async event=>{
-  //       let cooperation = event.returnValues;
-  //       console.log(cooperation.target)
-  //       await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,cooperation.cooperationID).send({from:this.state.account})
-  //     }
-  //   )
-  //   await platform.methods.createCooperation(this.state.target).send({from:this.state.account})
-  //   const key = await platform.methods.cooperationCnt().call();
-  //   console.log(key)
-  //   await platform.methods.uploadDataset(this.state.ipfs,this.state.privacy,key).send({from:this.state.account})
-  // }
-
+  //送出
   async handleClick(e) {
+    //call 智能合約的 createCooperation param: 目標、探勘演算法
+    //新增合作案
     await platform.methods.createCooperation(this.state.target,this.state.miningFunction).send({from:this.state.account})
-    let cooid = await platform.methods.cooperationCnt().call()
-    console.log(cooid)
 
+    //call 智能合約的 cooperationCnt
+    //判斷合作案ID
+    let cooid = await platform.methods.cooperationCnt().call()
+
+    //call 智能合約的 setDataset param: 設定對應的合作案ID
+    //新增資料集
     await platform.methods.setDataset(cooid-1).send({from:this.state.account})
-    console.log(cooid)
+
+    //call 智能合約的 datasetCnt
+    //
     let dataid = await platform.methods.datasetCnt().call()
-    console.log(dataid)
+  
+    //紀錄組織能提供的欄位上區塊鏈
     let columns = this.state.columns
-    console.log(columns.length)
     for( let i = 0 ;i<columns.length;i++){
-      console.log(columns[i]['name'])
+      //call 智能合約的 addColumn param: 欄位對應的資料集的ID
+      //設定資料集對應的欄位
       await platform.methods.addColumn(dataid-1,columns[i]['name']).send({from:this.state.account})
     }
   }
 
+  //顯示設定欄位，用來Debug
   async show(){
     let columns = this.state.columns
     for( let i = 0 ;i<columns.length;i++){
@@ -151,6 +124,7 @@ class Request extends Component {
     }
   }
 
+  //顯示輸入框和對應function
   render() {
     const styleInput={
       border:'2px solid'
@@ -237,4 +211,4 @@ class Request extends Component {
 }
 
 
-export default Request;
+export default CreateCooperation;

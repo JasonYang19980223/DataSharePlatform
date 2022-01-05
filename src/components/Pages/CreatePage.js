@@ -68,8 +68,9 @@ class CreatePage extends Component {
           <div stlye={{margin:"5px"}}>
             <h1>You are already a member</h1>
             <h2>Name:{this.state.name}</h2>
-            <h2>Email:{this.state.phone}</h2>
+            <h2>Phone:{this.state.phone}</h2>
             <h2>Email:{this.state.email}</h2>
+            <h2>Address:{this.state.account}</h2>
           </div>
         </div>
       );
