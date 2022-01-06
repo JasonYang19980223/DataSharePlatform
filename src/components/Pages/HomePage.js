@@ -14,7 +14,7 @@ class HomePage extends Component {
   }
 
   //進入頁面前先進行初始化，用來顯示使用者的地址及確定是否為管理者
-  async componentWillMount() {
+  async componentDidMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     const pm = await platform.methods.manager().call();

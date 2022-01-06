@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import web3 from '../Load/web3.js'
-import { create } from 'ipfs-http-client'
+//import { create } from 'ipfs-http-client'
 import Nbar from '../Nbar.js';
 import platform from '../Load/platform.js'
 
-const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
+//ipfs api
+//const ipfs=create({host:'ipfs.infura.io',port:'5001',apiPath: '/api/v0'});
 
 //********加入合作案的介面***********
 class JoinCooperation extends Component {

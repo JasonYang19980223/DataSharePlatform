@@ -27,7 +27,7 @@ class CreatePage extends Component {
 
   //進入頁面前先進行初始化，設定使用者地址，判斷是否為管理者
   //呼叫function check來判定是否已註冊成員
-  async componentWillMount() {
+  async componentDidMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({account: accounts[0] })
 

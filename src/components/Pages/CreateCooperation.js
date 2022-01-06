@@ -32,7 +32,7 @@ class CreateCooperation extends Component {
   }
 
 
-  //進入頁面前先進行初始化，設定使用者地址，並確認是否為管理者
+  //進入頁面後，設定使用者地址，並確認是否為管理者
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] })

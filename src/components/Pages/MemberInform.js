@@ -4,9 +4,15 @@ import Nbar from '../Nbar.js';
 import platform from '../Load/platform.js'
 import history from '../../History';
 
+//********成員基本資訊和參與了什麼合作案的介面***********
 class MemberInform extends Component {
   
   constructor(props){
+    //account 使用者的地址
+    //name 該組織的名稱
+    //phone 該組織的電話
+    //email 該組織的信箱
+    //cooperations 該組織參與的合作案列表
     super(props)
     this.state = {
       account:'',
@@ -14,10 +20,12 @@ class MemberInform extends Component {
       phone:'',
       email:'',
       cooperations:[],
-      isLogIn:''
+      isLogIn:false
     }
   }
 
+  //進入頁面前先進行初始化，設定使用者地址，並確認是否為管理者 
+  //call getInit() 來獲取該成員參與的合作案 
   async componentWillMount() {
     await this.check()
 
@@ -32,18 +40,25 @@ class MemberInform extends Component {
       await this.getInit()
   }
 
+  //判斷該組織是否已成為成員
   async check(){
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     this.setState({isLogIn: await platform.methods.memberCheck(this.state.account).call()})
   }
 
+  //獲取該成員參與的基本資訊和合作案
   async getInit(){
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
+    
+    //獲取基本資訊
     let m =await platform.methods.members(this.state.account).call()
-    this.setState({ name: m.name })
-    console.log(m.cooCnt)
+    this.setState({ name: m.orgnizationName })
+    this.setState({ phone: m.phone })
+    this.setState({ email: m.email })
+
+    //獲取合作案
     for(let i = 0;i<m.cooCnt;i++){
       let coo = await platform.methods.getCooperation(this.state.account,i).call()
       this.setState({
@@ -53,6 +68,8 @@ class MemberInform extends Component {
 
   }
 
+  //點擊button: col跳轉到MemberCols 判斷提供了什麼欄位
+  //param: 合作案ID、成員地址
   async handleCol(cooID,memaddress) {
     let path = "/MemberCols"; 
     history.push({

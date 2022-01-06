@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import web3 from '../Load/web3.js'
 import Nbar from '../Nbar.js';
 import platform from '../Load/platform.js'
-import history from '../../History';
 
+
+//********該成員提供什麼欄位的介面***********
 class RequestList extends Component {
   
+  //account 使用者的地址
+  //cols 該成員提供的欄位
   constructor(props){
     super(props)
     this.state = {
@@ -14,6 +17,8 @@ class RequestList extends Component {
     }
   }
 
+  //進入頁面前先進行初始化，設定使用者地址，並確認是否為管理者 
+  //call getInit() 來獲取該成員提供的欄位  
   async componentWillMount() {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
@@ -26,27 +31,17 @@ class RequestList extends Component {
     await this.getInit()
   }
 
+  //call 智能合約中的getDataset
+  //param: 合作案ID => this.props.location.state.cooperationID(從 CooperationInform 獲取的合作案ID)  .
+  //param: 該成員位址 => this.props.location.state.memberAddress(從 CooperationInform 獲取的成員地址)  
   async getInit(){
-    console.log(this.props.location.state.cooperationID)
-    console.log(this.props.location.state.memberAddress)
     const dataset =  await platform.methods.getDataset(this.props.location.state.cooperationID,this.props.location.state.memberAddress).call()
     for (let i = 0; i < dataset.colCnt; i++) {
       let col = await platform.methods.getColumn(dataset.datasetID,i).call()
-      console.log(col)
       this.setState({
         cols: [...this.state.cols, col]
       })
     }
-  }
-
-  async handleCooperation(cooID) {
-    let path = "/CooperationInform"; 
-    history.push({
-      pathname:path,
-      state:{
-        cooperationID:cooID
-      }
-    });
   }
 
   render() {
@@ -58,7 +53,7 @@ class RequestList extends Component {
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">Column</th>
+              <th scope="col">Columns</th>
             </tr>
           </thead>
           <tbody id="request">
